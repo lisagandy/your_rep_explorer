@@ -1,0 +1,738 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><script type="text/javascript" src="xml_files/a.js"></script>
+
+
+
+<style type="text/css">
+	@import url("http://s3.amazonaws.com/mashape-static/css/reset.css");
+	@import url("http://s3.amazonaws.com/mashape-static/css/fonts.css");
+	@import url("http://s3.amazonaws.com/mashape-static/css/blocks.css");
+	@import url("http://s3.amazonaws.com/mashape-static/css/elements.css");
+	@import url("http://s3.amazonaws.com/mashape-static/css/simplemodal/simplemodal.css");
+</style>
+<!--[if IE ]>
+<style type="text/css" media="screen">
+	@import url("http://s3.amazonaws.com/mashape-static/css/ie.css");
+</style>
+<![endif]-->
+<script type="text/javascript" src="xml_files/jsapi.js"></script>
+<script type="text/javascript" src="xml_files/jquery.js"></script>
+
+<style type="text/css">
+	@import url("http://s3.amazonaws.com/mashape-static/css/guide/guide.css");
+	@import url("http://s3.amazonaws.com/mashape-static/css/highlight/zenburn.css");
+</style>
+
+			<div id="content" class="content-subheader guide-content">
+				<div class="wrapper">
+					
+
+
+<div id="guide">
+	<h1>Congressional Close Up API</h1>
+	<h2 id="overview">All Votes: Overview</h2>
+	<div class="section-separator"></div>
+		<p>The Congressional Close Up API identifies anomalous voters (for more information about anomalous voters please see the Individual Votes: Overview section below)
+		and then attempts to find a reason for the anomalous behavior.  The system currently examines related campaign contributions, employment data, upcoming elections,
+		and committees that the voter might serve on.  The all votes section of the api returns a list of votes that the system has examined for the specified congressional
+		session.</p>
+	
+	<h3 id="xmlelements">Using the API:</h3>
+	<div class="section-separator"></div>	
+		To use the API simply specify the congressional session (currently only for 111th and 112th sessions)<br><br>
+		Example for the 112th congress:<br>
+		<a href="http://www.ccu-dev.com/votes_xml/112">http://www.ccu-dev.com/votes_xml/112</a>
+		
+		
+	<div class="section-separator"></div>
+	<h3 id="xmlelements">XML Elements Returned</h3>
+	<table style="text-align: left; font-size: 13px;" cellspacing="20">
+		<thead>
+			<tr>
+				<th style="width: 100px;">XML Element</th>
+				<th style="width: 700px;">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr valign="top">
+				<td><code>votes</code></td>
+				<td>
+					<p>It's the root element that contains all vote elements.</p>
+					<p>
+						<b>Parent element: </b><i>No parent element</i>
+					</p>
+					<p>
+						<b>Child elements: </b>
+						<code>vote</code>
+					</p>
+					</div>
+				</td>
+			</tr>
+			<tr valign="top">
+				<td><code>vote</code></td>
+				<td>
+					<p>Give basic information about a specific vote</p>
+					<p>
+						<b>Parent element:</b>
+						<code>votes</code>
+					</p>
+					<p>
+						<b>Child elements:</b>
+						<code>No child element</code>
+						-
+					</p>
+					<p>
+						<b>Attributes:</b>
+					</p>
+					<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+						<code>number</code>
+						<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+							The number of the vote</p>
+					</div>
+					<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+						<code>date</code>
+						<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+							The date of the vote.</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>question</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									Vote question</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>result</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									Vote result</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>has-subtopics</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									Each vote is automatically assigned topics from the Jones/Baumgartner codebook. 
+									(for more information see: http://www.policyagendas.org/page/topic-codebook)
+									However if the system does not feel confident about the assignment it will 
+									not assign any topics.
+									</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>has-rel-contributions</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								    This identifies that one or more anomalous voters have relevant campaign contribution
+									associated with them for this particular vote.
+									</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>has-rel-diff-state-senator-leanings</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								    This identifies that one or more anomalous voters is from a state which leans in a different political
+									direction from the voter (for example a Democrat Senator who represents a traditionally Republican stat)
+									</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>has-rel-industries</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								    This identifies that one or more anomalous voters have relevant employment (industry) data
+									associated with them for this particular vote.
+									</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>has-rel-ranking-committee</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								    This identifies that one or more anomalous voters are a chair or vice-chair for a particular
+								committee withthis particular vote.
+									</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>has-rel-upcoming-election</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								    This identifies that one or more anomalous voters have an upcoming election associated
+								with them for this particular vote.
+									</p>
+							</div>
+							
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>url</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								    The url which returns more information about the particular vote, for more information please 
+									see the Individual Votes: Overview section below.
+									</p>
+							</div>
+							
+							
+							
+				</td>
+			</tr>
+			
+		</tbody>
+	</table>
+	
+	
+	<h2 id="overview">Individual Vote: Overview</h2>
+	<div class="section-separator"></div>
+		<p>The Congressional Close Up API identifies anomalous voters.  In order to identify anomalous voters per vote, the system first identifies the particular bill or amendment
+			sponsor in regards to the particular vote.  It then looks at the voters from the same party as the sponsor who voted against the bill/amendment (NAY) and 
+			the voters from the opposite party who voted for the bill/amendment (AYE).  
+	    </p>
+	
+		<p>Once anomalous voters are detected then the CCU system tries to find reasons for their anomalous behavior.  
+			The system currently examines: <br>
+			<ul> 
+				<li>Bipartisan behavior: whether the voter tends to
+			vote in a bipartisan manner in general</li>
+			<li>Contributions: whether the voter has received any related campaign contributions </li>
+			<li>Constituency concerns: whether there is a related industry in the voter's constituency that might be affected by the vote</li>
+			<li>Upcoming elections: whether there is an upcoming election that might influence the vote</li>
+			<li>Relevant committees: whether the voter is a member of a related committee</li>
+			</ul>
+	    </p>
+	
+		<p>The CCU Individual Vote API gives a list of anomalous voters (if any) and also lists if any of the above explanations apply to each voter.
+	    </p>
+	
+	
+	<h3 id="xmlelements">Using the API:</h3>
+	<div class="section-separator"></div>	
+		To use the API simply specify the congressional session, the vote number, the bill prefix and the bill number<br><br>
+		Example for the 111th congress, Vote #156 regarding Bill S.3217:<br>
+		<a href="http://www.ccu-dev.com/votes/xml=true&session=111&bill_prefix=s&bill_number=3217&vote_number=156">http://www.ccu-dev.com/votes/xml=true&session=111&bill_prefix=s&bill_number=3217&vote_number=156</a>
+		
+		
+	<div class="section-separator"></div>
+	<h3 id="xmlelements">XML Elements Returned</h3>
+	<table style="text-align: left; font-size: 13px;" cellspacing="20">
+		<thead>
+			<tr>
+				<th style="width: 100px;">XML Element</th>
+				<th style="width: 700px;">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr valign="top">
+				<td><code>vote</code></td>
+				<td>
+					<p>It's the root element that contains information about the vote</p>
+					<p>
+						<b>Parent element: </b><i>No parent element</i>
+					</p>
+					<p>
+						<b>Child elements: </b><br>
+						<code>vote-info</code><br>
+						<code>bill-info</code><br>
+						<code>amendment-info</code><br>
+						<code>topic</code>
+					</p>
+					</div>
+				</td>
+			</tr>
+			<tr valign="top">
+				<td><code>vote-info</code></td>
+				<td>
+					<p>Give basic information about a specific vote</p>
+					<p>
+						<b>Parent element:</b>
+						<code>vote</code>
+					</p>
+					<p>
+						<b>Child elements:</b>
+						<code>No child element</code>
+						-
+					</p>
+					<p>
+						<b>Attributes:</b>
+					</p>
+					<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+						<code>number</code>
+						<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+							The number of the vote</p>
+					</div>
+					<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+						<code>date</code>
+						<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+							The date of the vote.</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>question</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									Vote question</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>result</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									Vote result</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>type</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									Type of vote
+									</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>num-dems-aye,num-dems-nay,num-dems-present, num-dems-no-vote</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									Gives the number of specific types of votes from the Democratic party
+									</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>num-reps-aye,num-reps-nay,num-reps-present, num-reps-no-vote</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								    Gives the number of specific types of votes from the Republican party
+									</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>num-other-aye,num-other-nay,num-other-present, num-other-no-vote</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								    Gives the number of specific types of votes from parties besides the Republican and Democratic parties.
+									</p>
+							</div>
+				</td>
+				<tr valign="top">
+				<td><code>bill-info</code></td>
+				<td>
+					<p>Give basic information about the bill associated with the specified vote.</p>
+					<p>
+						<b>Parent element:</b>
+						<code>vote</code>
+					</p>
+					<p>
+						<b>Child elements:</b>
+						<code>No child element</code>
+						-
+					</p>
+					<p>
+						<b>Attributes:</b>
+					</p>
+					<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+						<code>congress</code>
+						<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+							The session of congress the bill is associated with.</p>
+					</div>
+					<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+						<code>prefix</code>
+						<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+							The prefix of the bill (usually S., H. SR, etc...)</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>number</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									The number of the bill</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>title</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									The title of the bill</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>sponsor</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									The name of sponsor in lastname,firstname format</p>
+							</div>
+							<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+								<code>sponsor-gov-track-id</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									The gov track (http://govtrack.org) unique id assigned to the sponsor</p>
+							</div>
+							<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+								<code>sponsor-party</code>
+								<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+									The party of the sponsor</p>
+							</div>
+					
+				</td>
+				</tr>
+					<tr valign="top">
+					<td><code>amendment-info</code></td>
+					<td>
+						<p>Give basic information about the amendment associated with the specified vote. This element only appears if there is a specific amendment associated with the vote.</p>
+						<p>
+							<b>Parent element:</b>
+							<code>vote</code>
+						</p>
+						<p>
+							<b>Child elements:</b>
+							<code>No child element</code>
+							-
+						</p>
+						<p>
+							<b>Attributes:</b>
+						</p>
+						<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+							<code>number</code>
+							<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								The number of the amendment</p>
+						</div>
+						<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+							<code>description</code>
+							<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+								Description of the amendment</p>
+								</div>
+								<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+									<code>sponsor</code>
+									<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+										The name of sponsor in lastname,firstname format</p>
+								</div>
+								<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+									<code>sponsor-gov-track-id</code>
+									<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+										The gov track (http://govtrack.org) unique id assigned to the sponsor</p>
+								</div>
+								<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+									<code>sponsor-party</code>
+									<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+										The party of the sponsor</p>
+								</div>
+
+					</td>
+					</tr>
+				
+				
+						<!-- <tr valign="top">
+												<td><code>topic</code></td>
+												<td>
+													<p>Gives the Jones Topic that the CCU system has automatically assigned to the vote (from the Jones/Baumgartner codebook: http://www.policyagendas.org/page/topic-codebook)</p>
+													<p>
+														<b>Parent element:</b>
+														<code>vote</code>
+													</p>
+													<p>
+														<b>Child elements:</b>
+														<code>No child element</code>
+														-
+													</p>
+													<p>
+														<b>Attributes:</b>
+													</p>
+													<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+														<code>name</code>
+														<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+															The name of the topic.</p>
+													</div>
+												</td>
+												</tr> -->
+				
+				
+			</tr>
+						</tr>
+								<tr valign="top">
+								<td><code>anom-voters</code></td>
+								<td>
+									<p>Gives a list of anomalous voters</p>
+									<p>
+										<b>Parent element:</b>
+										<code>None</code>
+									</p>
+									<p>
+										<b>Child elements:</b>
+										<code>voter</code>
+										-
+									</p>
+								</tr>
+								
+								<tr valign="top">
+								<td><code>voter</code></td>
+								<td>
+									<p>Contains information and explanations concerning each anomalous voter</p>
+									<p>
+										<b>Parent element:</b>
+										<code>anom-voters</code>
+									</p>
+									<p>
+										<b>Child elements:</b><br>
+										<code>voter-info</code><br>
+										<code>bi-partisan-stats</code><br>
+										<code>rel-contribution</code><br>
+										<code>rel-next-election</code><br>
+										<code>rel-committee</code><br>
+										<code>rel-industry</code><br>
+									</p>
+								</tr>
+								
+								<tr valign="top">
+								<td><code>voter-info</code></td>
+								<td>
+									<p>Contains information and explanations concerning each anomalous voter</p>
+									<p>
+										<b>Parent element:</b>
+										<code>voter</code>
+									</p>
+									<p>
+										<b>Child elements: None</b>
+									</p>
+									<p>
+										<b>Attributes:</b>
+									</p>
+									<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+										<code>lastname</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											Voter's lastname</p>
+									</div>
+									<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+										<code>firstname</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											Voter's firstname</p>
+											</div>
+											<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+												<code>osid</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													Unique osid assigned to the voter</p>
+											</div>
+											<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+												<code>gov-track-id</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													Unique id assigned by govtrack.org</p>
+											</div>
+											<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+												<code>chamber</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													Either Senate or House, currently only Senate as the CCU system only
+													looks at votes that take place in the Senate</p>
+											</div>
+											<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+												<code>state</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													State the voter represents</p>
+											</div>
+												<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+													<code>party</code>
+													<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+														Voter's party: Democrat, Republican, or other</p>
+												</div>
+											
+											
+								</td>
+								</tr>
+								<tr valign="top">
+								<td><code>bi-partisan-stats</code></td>
+								<td>
+									<p>Contains information and explanations concerning the with-party voting percentage of the voter,
+										this element only appears when the particular voter is in the lowest quartile of all Senators
+										in Congress</p>
+									<p>
+										<b>Parent element:</b>
+										<code>voter</code>
+									</p>
+									<p>
+										<b>Child elements: None</b>
+									</p>
+									<p>
+										<b>Attributes:</b>
+									</p>
+									<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+										<code>party-percent-score</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											The percentage that the voter votes with his/her party</p>
+									</div>
+									<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+										<code>rank</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											The rank of the voter's party-percent-score among all senators</p>
+											</div>
+											<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+												<code>source</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													http://projects.washingtonpost.com</p>
+											</div>
+											
+								</td>
+								</tr>	
+								<tr valign="top">
+								<td><code>rel-contribution</code></td>
+								<td>
+									<p>This element is only present if a contribution for a particular voter from a relevant interest group is statistically significant
+										when compared to contributions from the same interest group to other senators.</p>
+									<p>
+										<b>Parent element:</b>
+										<code>voter</code>
+									</p>
+									<p>
+										<b>Child elements: None</b>
+									</p>
+									<p>
+										<b>Attributes:</b>
+									</p>
+									<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+										<code>business-type</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											Type of business that the contributors are associated with</p>
+									</div>
+									<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+										<code>business-code</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											Unique code of the business, associated with the business-type</p>
+											</div>
+											<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+												<code>total-amount</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													Total amount contributed from all contributors associated with the business-type</p>
+											</div>
+											<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+												<code>total-amt-rank-senators</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													How much this particular voter receives from the business compared with other senators.</p>
+													</div>
+													<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+														<code>amt-start-date</code>
+														<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+															The starting date used to calculate total-amt</p>
+													</div>
+													<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+														<code>amt-end-date</code>
+														<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+															The ending date used to calculate total-amt</p>
+															</div>
+																<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+																	<code>source</code>
+																	<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+																		http://opensecrets.org</p>
+																</div>	
+								</td>
+								</tr>
+								<tr valign="top">
+								<td><code>rel-next-election</code></td>
+								<td>
+									<p>This element is only present if there is an upcoming election that might influence the particular voter.</p>
+									<p>
+										<b>Parent element:</b>
+										<code>voter</code>
+									</p>
+									<p>
+										<b>Child elements: None</b>
+									</p>
+									<p>
+										<b>Attributes:</b>
+									</p>
+									<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+										<code>prediction</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											The prediction for the outcome of the race, either Toss Up, Lean D, Lean R, Running for Senate,
+										    Running for Governor,
+										    Running for Mayor,
+										    Potential Retirement,
+										    Potential Senate Candidate,
+										    Potential Governor Candidate,
+										    or Potential Mayoral Candidate</p>
+									</div>
+									<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+										<code>election-date</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											The date of the upcoming election</p>
+											</div>
+											<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+												<code>senate-class</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													The senate class that the voter belongs to</p>
+											</div>
+											<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+												<code>source-date</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													The date that cookpolitical.com reported the election predictions</p>
+													</div>
+													<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+														<code>source</code>
+														<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+															http://cookpolitical.com</p>
+													</div>
+													
+								</td>
+								</tr>
+								<tr valign="top">
+								<td><code>rel-committee</code></td>
+								<td>
+									<p>This element is only present if there is a committee that might influence the particular vote, and
+										that the voter is a chair, vice-chair or ranking member in.</p>
+									<p>
+										<b>Parent element:</b>
+										<code>voter</code>
+									</p>
+									<p>
+										<b>Child elements: None</b>
+									</p>
+									<p>
+										<b>Attributes:</b>
+									</p>
+									<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+										<code>name</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											Name of the committee</p>
+									</div>
+									<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+										<code>code</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											The unique code of the committee</p>
+											</div>
+											<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+												<code>chair</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													If the voter is the chair of the committee</p>
+											</div>
+											<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+												<code>vice-chair</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													If the voter is the vice-chair of the committee</p>
+													</div>
+													<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+														<code>ranking-member</code>
+														<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+															If the voter is the ranking member of the committee</p>
+													</div>
+													
+								</td>
+								</tr>
+								<tr valign="top">
+								<td><code>rel-industry</code></td>
+								<td>
+									<p>This element is only present if there is an industry in the voter's constituency that might be affected
+										by the particular vote and the number of employees in that industry for the state is statistically significant
+										when compared to other states.</p>
+									<p>
+										<b>Parent element:</b>
+										<code>voter</code>
+									</p>
+									<p>
+										<b>Child elements: None</b>
+									</p>
+									<p>
+										<b>Attributes:</b>
+									</p>
+									<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+										<code>name</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											Name of the industry</p>
+									</div>
+									<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+										<code>naics-code</code>
+										<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+											The unique NAICS code of the industry</p>
+											</div>
+											<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+												<code>state</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													The state the industry is located in (the same as the associated voter's state)</p>
+											</div>
+											<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+												<code>percent-pop-emps</code>
+												<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+													Percent of the total population of the state employed by the industry</p>
+													</div>
+													<div style="background-color: rgb(221, 221, 221); padding: 5px;">
+														<code>percent-pop-emps-rank-all-states</code>
+														<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+															The rank of the percentage of employees for the particular state when compared to all
+															other states</p>
+													</div>
+													<div style="background-color: rgb(238, 238, 238); padding: 5px;">
+														<code>source</code>
+														<p style="border-top: 1px solid rgb(102, 102, 102); padding-top: 5px; margin-top: 5px;">
+															http://lehd.did.census.gov/led/</p>
+															</div>
+													
+								</td>
+								</tr>
+				
+
+			
+		</tbody>
+	</table>
+	
+	
+	
+	
+	</body></html>

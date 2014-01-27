@@ -1,0 +1,33 @@
+Good:
+http://ragnarok.cs.northwestern.edu/ccu_beta/votes/session=111&bill_prefix=h&bill_number=2&vote_number=23:
+comments, social assistance makes sense
+industry donations???
+
+http://127.0.0.1:8000/votes/session=111&bill_prefix=sc&bill_number=13&vote_number=116
+http://127.0.0.1:8000/votes/session=111&bill_prefix=s&bill_number=896&vote_number=174
+http://127.0.0.1:8000/votes/session=111&bill_prefix=s&bill_number=896&vote_number=178
+
+
+Bad:
+http://127.0.0.1:8000/votes/session=111&bill_prefix=h&bill_number=1&vote_number=53: more rules? .... is this okay??
+http://127.0.0.1:8000/votes/session=111&bill_prefix=sc&bill_number=13&vote_number=127
+http://127.0.0.1:8000/votes/session=111&bill_prefix=h&bill_number=2847&vote_number=337
+
+
+Many just have bi partisan stats and anomalous voters...
+json...
+
+
+
+
+
+
+problematic:
+nature of a substitute amendments
+need dates in related industry
+maybe put all contributions for each vote
+
+why for #23 vote there is social welfare but others not???
+
+criterion for k means stop: http://en.wikipedia.org/wiki/Determining_the_number_of_clusters_in_a_data_set#cite_note-1
+

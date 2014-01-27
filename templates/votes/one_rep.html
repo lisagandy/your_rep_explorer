@@ -1,0 +1,352 @@
+<html>
+	<head>
+		
+		<!-- CSS -->
+		<link rel="stylesheet" href="{{refURL}}/static/css/style_vote.css" />
+		<link rel="stylesheet" href="{{refURL}}/static/css/blue/style.css" />
+
+		<!-- JS -->
+		<script type="text/javascript" src="{{refURL}}/static/js/jquery.js"></script>
+		<script type="text/javascript" src="{{refURL}}/static/js/jqBarGraph.js"></script>
+		<script type="text/javascript" src="{{refURL}}/static/js/browser_detect.js"></script>
+		<script type="text/javascript" src="{{refURL}}/static/js/jquery.tablesorter.js"></script> 
+		<script type="text/javascript">
+			$(function() {
+				$(".meter > span").each(function() {
+					$(this)
+						.data("origWidth", $(this).width())
+						.width(0)
+						.animate({
+							width: $(this).data("origWidth")
+						}, 1200);
+				});
+			});
+		
+			
+		
+		
+		
+		
+		
+		</script>
+		
+	</head>	
+	<body>
+		<div class="accordion">
+		<div id="container">
+			<div id="header">
+				<div id="logo"><img src="/static/images/logo.png" alt="Congressional Close-Up"/></div>
+			</div>
+			<div id="content_outer">
+
+				<div id="content_inner_rep_bio">
+		
+					<div id="h1fake">{{rep.officialName}}</div>
+					U.S. Senator, {{rep.state.name.title}}<br>
+					<hr>
+					<div id="img_div"><img src="{{refURL}}/static/images/senators/{{rep.repGovTrackID}}.jpeg" width="70%" height="70%"></div>
+					<div id="info_div">
+					<b>Party:</b><br>
+					<b>State:</b><br>
+					<b>Sworn in Date:</b><br>
+					<b>Birthdate:</b></br>
+					<b>YoutubeID:</b><br>
+					<b>Website:</b><br>
+				
+					<!-- <b>Twitter ID:</b><br> -->
+					</div>
+					
+					<div id="info_div2">
+						{%if rep.party == "D" %}
+							Democrat<br>
+						{%else%}
+							Republican<br>
+						{%endif%}
+						{{rep.state.name.title}}<br>
+						{{rep.swornInDate}}<br>
+						{{rep.birthday}}<br>
+						{{rep.youtubeID}}<br>
+						{{rep.website}}<br>
+						<!-- {{rep.twitterID}}<br> -->
+					</div>
+					<div style="float:left;width:75px;height:100px;border-right: 1px solid gray;"> </div>
+					
+					<div id="info_div" style="padding-left:20px;">
+						{%if rep.twitterID%}
+							<b>Twitter ID:</b><br>
+						{%endif%}
+						{%if rep.youtubeID%}
+							<b>Youtube ID:</b><br>
+						{%endif%}
+						{%if rep.website%}
+							<b>Website:</b><br>
+						{%endif%}
+					</div>
+					
+					<div id="info_div2">
+						{%if rep.twitterID%}
+							{{rep.twitterID}}<br>
+						{%endif%}
+						{%if rep.youtubeID%}
+							{{rep.youtubeID}}<br>
+						{%endif%}
+						{%if rep.website%}
+							{{rep.website}}<br>
+						{%endif%}
+					</div>
+					
+					
+					
+				</div>	
+				<div id="content_inner_rep_bio2">
+					<div style="clear:both;"></div>	
+					<div id="h1fake">Voting Record</div>
+					<hr>
+					<b>% of Against Party Votes:</b> {{percentAV}}% &nbsp;&nbsp;({{numAVVotes}}/{{numAllVotes}} total votes)<br>
+					<br>
+
+					<b>Vote Topics when most likely to vote against party:</b><br>
+						{%for topic,num in lsTopicsMost%}
+							{{topic}}&nbsp;({{num}} votes)<br>
+						{%endfor%}
+					
+					<!-- <div id="topicGraph"></div> -->
+				</div>
+					
+				<div id="content_inner_rep_bio2">
+					<div style="clear:both;"></div>	
+					<div id="h1fake">Influence-o-meter</div>
+					<hr>
+					
+					{%if numRC > 0%}
+						<b>Campaign Contributions</b>
+						{% if numRC < 30 %}
+							<div class="meter green nostripes">
+						{%endif%}
+						{% if numRC > 30 and numRC < 60 %}
+							<div class="meter orange nostripes">
+						{%endif%}
+						{% if numRC > 60 and numRC < 90 %}
+							<div class="meter red nostripes">
+						{% endif %}
+								<span style="width: {{numRC}}%"></span>
+						</div>
+						<div id="simpleGraph"></div>
+						<div id="simpleGraphMoreData"></div>
+						
+					{%endif%}
+					
+					{%if numIR > 0%}
+						<br>
+						<b>Local Industries <br></b>
+						{% if numIR < 30 %}
+							<div class="meter green nostripes">
+						{%endif%}
+						{% if numIR > 30 and numIR < 60 %}
+							<div class="meter orange nostripes">
+						{%endif%}
+						{% if numIR > 60 and numIR < 90 %}
+							<div class="meter red nostripes">
+						{% endif %}
+								<span style="width: {{numIR}}%"></span>
+							</div>
+						<div id="simpleGraphIR"></div>
+						<br>
+						<div id="simpleGraphMoreDataIR"></div>
+					{%endif%}
+					
+					{%if numPE > 0 %}
+						<br>
+						<b>Upcoming Elections</b>
+						{% if numPE < 30 %}
+							<div class="meter green nostripes">
+						{%endif%}
+						{% if numPE > 30 and numPE < 60 %}
+							<div class="meter orange nostripes">
+						{%endif%}
+						{% if numPE > 60 %}
+							<div class="meter red nostripes">
+						{% endif %}
+								<span style="width: {{numPE}}%"></span>
+							</div>
+					{%endif%}
+					
+					{%if numDL > 0 and numDL < 1%}
+							<br>
+							<b>Difference between State and Senator political leanings</b><br>
+							{% if numDL < 30 %}
+								<div class="meter green nostripes">
+							{%endif%}
+							{% if numDL > 30 and numDL < 60 %}
+								<div class="meter orange nostripes">
+							{%endif%}
+							{% if numDL > 60%}
+								<div class="meter red nostripes">
+							{% endif %}
+									<span style="width: {{numDL}}%"></span>
+								
+							</div>
+					{%endif%}
+					
+					{%if numCC > 0%}
+						<br>
+						<b>Committee Chairmanship</b><br>
+						{% if numCC < 30 %}
+							<div class="meter green nostripes">
+						{%endif%}
+						{% if numCC > 30 and numCC < 60 %}
+							<div class="meter orange nostripes">
+						{%endif%}
+						{% if numCC > 60%}
+							<div class="meter red nostripes">
+						{% endif %}
+								<span style="width: {{numCC}}%"></span>
+								
+						</div>
+							<div id="simpleGraphCC"></div>
+				    {%endif%} 
+					
+				</div>
+				
+			
+				<script>
+					// graphByTopic = new Array(
+					// 						{%for topic,num in lsTopicNumVotes%}
+					// 							[{{num}},'{{topic}}']
+					// 							{%if not forloop.last%}
+					// 								,
+					// 							{%endif%}
+					// 						{%endfor%}
+					// 					);
+					// 				
+					// 					$("#topicGraph").jqBarGraph({
+					// 						data: graphByTopic,
+					// 						width: 600,
+					// 						height:300,
+					// 						legend:'true',
+					// 						colors: {%autoescape off%}{{lsTopicColors}}{%endautoescape%},
+					// 						barSpace: 1,
+					// 						legendWidth:300,
+					// 						title: '<h3>Against Party Votes by Topic</h3>'
+					// 					});
+					graphByMoreDataIR = new Array(
+						[2.0,'Hospitals in Montana'],
+						[1.5,'Avg']
+						)
+					
+						$("#simpleGraphMoreDataIR").jqBarGraph({
+							data: graphByMoreDataIR,
+							width: 500,
+							height:200,
+							legend:'true',
+							colors: ['#871F78','#871F78'],
+							barSpace: 1,
+							legendWidth:300,
+							// title: '<h3>Amounts of money per business in the Finance/Insurance/Real Estate Sector</h3>'
+						});
+					
+					
+					graphByMoreDataCC = new Array(
+						
+						[295966,'Commercial Banks'],
+						[317407,'Commercial Banks Avg'],
+						[309400,'Life insurance'],
+						[69802,'Life Insurance Avg'],
+						//[379035,'Insurance brokers'],
+						[480334,'Security brokers'],
+						[317150,'Security brokers Avg'],
+						[1833350,'Investment Banking'],
+						[128883,'Investment Banking Avg']
+			
+					);
+					
+					$("#simpleGraphMoreData").jqBarGraph({
+						data: graphByMoreDataCC,
+						width: 700,
+						height:200,
+						legend:'true',
+						colors: ['#871F78','#871F78','#437346','#437346','#006400','#006400','#3CB371','#3CB371'],
+						barSpace: 1,
+						legendWidth:300,
+						// title: '<h3>Amounts of money per business in the Finance/Insurance/Real Estate Sector</h3>'
+					});
+					
+					
+					graphByCommittee = new Array(
+						{%for num,topic in lsCCNumVotes%}
+							[{{num}},'{{topic}}']
+							{%if not forloop.last%}
+								,
+							{%endif%}
+						{%endfor%}
+					);
+
+
+					$("#simpleGraphCC").jqBarGraph({
+						data: graphByCommittee,
+						width: 500,
+						height:200,
+						legend:'true',
+						colors: {%autoescape off%}{{lsCCColors}}{%endautoescape%},
+						barSpace: 1,
+						legendWidth:300,
+						title: '<h3>Number of votes possibly influenced <br> by committee chairmanships</h3>'
+					});
+				
+					graphByMonth = new Array(
+						{%for topic,num in lsRCNumVotes%}
+							[{{num}},'{{topic}}']
+							{%if not forloop.last%}
+								,
+							{%endif%}
+						{%endfor%}
+					);
+
+
+					$("#simpleGraph").jqBarGraph({
+						data: graphByMonth,
+						width: 500,
+						height:200,
+						legend:'true',
+						colors: {%autoescape off%}{{lsRCColors}}{%endautoescape%},
+						barSpace: 1,
+						legendWidth:300,
+						title: '<h3>Number of votes possibly influenced <br> by campaign contribution interest group</h3>'
+					});
+				
+					graphByMonthIR = new Array(
+						{%for topic,num in lsIRNumVotes%}
+							[{{num}},'{{topic.name}}']
+							{%if not forloop.last%}
+								,
+							{%endif%}
+						{%endfor%}
+					);
+					
+					$("#simpleGraphIR").jqBarGraph({
+						data: graphByMonthIR,
+						width: 500,
+						height:200,
+						legend:'true',
+						colors: {%autoescape off%}{{lsIRColors}}{%endautoescape%},
+						barSpace: 1,
+						legendWidth:300,
+						title: '<h3>Number of votes possibly influenced <br> by local industry presence</h3>'
+					});
+					
+					
+				
+				
+				</script>
+				
+	
+			</div>
+	
+	
+		</div>	
+		
+	<div style="clear:both;"></div>	
+			
+	</body>
+	
+</html>

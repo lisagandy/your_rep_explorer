@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Congressional Close-up</title>
+
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+<!-- CSS -->
+<link rel="stylesheet" href="{{refURL}}/static/css/style.css" />
+
+<!-- JS -->
+<script src="{{refURL}}/static/js/jquery.js"></script>
+<script src="{{refURL}}/static/js/browser_detect.js"></script>
+<link rel="stylesheet" href="{{refURL}}/static/css/jquery.ui.all.css">
+<script src="{{refURL}}/static/js/jquery.js"></script>
+<script src="{{refURL}}/static/js/browser_detect.js"></script>
+<script src="{{refURL}}/static/js/jquery.ui.core.js"></script>
+<script src="{{refURL}}/static/js/jquery.ui.widget.js"></script>
+<script src="{{refURL}}/static/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="{{refURL}}/static/js/choose_votes.js"></script>
+	<script>
+	$(function() {
+			$( "#datepicker" ).datepicker();
+			$( "#datepicker2" ).datepicker();
+		});
+		
+
+			$(document).ready(function(){
+				$(".accordion .hide_text").hide();
+
+				$(".accordion .show_text").click(function(){
+				  //alert('here');
+				  $(this).next(".hide_text").slideToggle("slow")
+				  $(this).toggleClass("active");});
+			});	
+			
+			var _gaq = _gaq || [];
+			  _gaq.push(['_setAccount', 'UA-26325163-1']);
+			  _gaq.push(['_trackPageview']);
+
+			  (function() {
+			    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			  })();
+
+
+
+	</script>
+
+
+</head>
+
+<body>
+
+<div id="container">
+	<div id="header">
+		<div id="logo"><a href="index.html"><img src="{{refURL}}/static/images/logo.jpg" alt="Congressional Close-Up"/></a></div>
+		<ul id="global_nav">
+			
+
+				
+		
+				<li><a href="/demo" >Votes in Senate<br> Session 112</a>
+				<a href="/demo" class="hover read_story"></a></li>
+
+				<li><a href="/demo111" >Votes in Senate<br> Session 111</a>
+					<a href="/demo111" class="hover read_story"></a></li>
+
+				<li><a href="/demo111_house" >Votes in House<br> Session 111</a>
+					<a href="/demo111_house" class="hover read_story"></a></li>
+		
+				<li><a href="/demo_house" >Votes in House<br> Session 112</a>
+						<a href="/demo_house" class="hover read_story"></a></li>
+		
+			<!-- <li><a href="/choose_votes" >Search Votes by <br> Topic and Senator</a>
+						<a href="/choose_votes" class="hover read_story"></a>
+						</li> -->
+			
+			<li id="active"><a href="/about" >About<br> and API</a>
+			</li>
+			
+			</li>
+			
+		</ul>
+		<div id="right_nav"></div>
+	</div>
+	
+	<div class="floatClear"></div>
+
+	
+<div id="content_outer">
+	<div id="content_inner2">
+		<h2>What is Congressional Close Up?</h2>
+							<p>There are currently sixteen nations, which are committed to making government data open and accessible to the public [1]. However this data is usually in a format that is difficult for the average person to sift through. Therefore it seems the potential of this data is wasted. Congressional Close Up is a computer system that seeks to narrow the “data divide” between open government data and the average citizen.</p>
+							<p>To begin Congressional Close Up makes the assumption that all United States Senators will vote with their party. This is a valid assumption, as today’s congress is increasingly partisan. Therefore when a Senator votes against party the system seeks to explain this anomalous behavior. The system automatically finds relevant campaign contributions, local industries, committee memberships and other influences, which might have influenced the unusual vote.</p>
+
+							<p>Most senate votes are on whether to pass or table a bill or amendment. Therefore in order to make a connection between a Senate vote and possible influences on that vote, it is important to know the topic of the bill or amendment that the vote dealt with. Luckily there is a classification system for bills that exists: the Jones and Baumgartner codebook [2][3]. This codebook lists 19 topics and 226 subtopics that can classify any bill. Thousands of bills from prior sessions of congress have been hand coded by topic and these are used for training a model.  Congressional Close Up then uses Naïve Bayes machine learning techniques to classify new bills and amendments as they arrive. Then the system identifies senators who vote against party, and then possible influences that are matched to the current topic of the relevant bill or amendment. </p>
+
+								<div id="note">
+									[1] Lichtenstein, J. Why Open Data is Not Enough. Wired Magazine, July 2011. <br>
+									[2] John, P. The Policy Agendas Project: A Review. Journal of European Public Policy.
+									Vol 13, Issue 7, 975-986. 2006. <br>
+									[3] Topic Codebook, Policy Agendas Project. http://www.policyagendas.org/page/topic-
+									codebook.<br>
+
+								</div>
+								<br>
+								
+								<h2>Congressional Close Up API</h2>
+				 Feel free to use the Congressional Close Up API.  The documentation is at <a href="http://www.ccu-dev.com/ccu_api">http://www.ccu-dev.com/ccu_api</a>.	<br><br>							
+									
+						  <h2>Contact Us!</h2>
+		 Have any comments or suggestions? Please contact us at <a href="mailto:lisagandy@u.northwestern.edu">lisagandy@u.northwestern.edu.</a><br> 
+						You can also follow us on twitter at <a href="http://twitter.com/Congresscloseup">CongressCloseUp</a>.
+		
+		<div class="floatClear"></div><br><br>
+	
+		
+</div>
+</body>
+
+</html>

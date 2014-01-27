@@ -1,0 +1,289 @@
+@charset "UTF-8";
+/* CSS Document for ... */
+/* Prepared by Heather Smith */
+
+* 
+	{ 
+	    margin: 0; 
+	    padding: 0; 
+	}
+	
+img 	
+	{
+	    border: 0px;
+	}
+
+body 
+	{ 
+	    font-size: 12px; 
+	    font-family:"Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
+	    color: #303030;
+	   	background-image: url(../images/bkgd.jpg);
+		background-color: #022e5d;
+		height:847px;
+		width: 100%;
+		background-repeat: repeat-x;
+	}	
+
+
+/* _____________________________ STRUCTURAL LAYOUT _____________________________ */
+
+#container
+	{
+	width: 884px;
+	margin-right:auto;
+	margin-left:auto;
+	padding:0px;
+	text-align:left;
+	}
+
+
+#logo
+    {
+	float: left;
+    }
+    
+#header
+	{
+	height: 154px;
+	margin-top: 37px;
+	}
+	
+.read_story
+	{
+	margin-top: 10px;
+	}
+    
+#right_nav
+	{
+	background-image: url(../images/right_nav.jpg);
+	background-repeat: no-repeat;
+	height: 154px;
+	width: 12px;
+	float: right;
+	}
+	
+#sources_outer
+	{
+	float: left;
+	width: 140px;
+	background-color: #99a8b5;
+	padding: 5px;
+	margin-top: 10px;
+	margin-right:20px;
+	margin-left:20px;
+	}
+	
+#sources_inner
+	{
+	float: left;
+	width: 100px;
+	background-color: #99a8b5;
+	padding: 20px;
+	border: 1px solid #818e99;
+	}	
+	
+#content_outer
+	{
+	background-color: #FFF;
+	padding: 5px;
+	width: 1000px;
+	float: right;
+	margin-right: -100px;
+	margin-top: 20px;
+	}
+	
+#content_inner1
+	{
+    padding:5px;
+	margin-top:10px;
+	/*margin-left:250px;*/
+    margin-left:500px;
+	/*height:250px;*/
+	border: 1px solid #cdcdcc;
+	}
+	
+#content_inner2
+	{
+    padding:5px;
+	margin-top:10px;
+	margin-left:20px;
+	/*height:300px;*/
+	border: 1px solid #cdcdcc;
+	}	
+
+table tr td
+	{
+	font-size: 11px;
+	border: 1px solid #aaa;
+	padding: 5px;
+	}
+
+.odd{
+    background:#EFF2FF;
+}	
+.table_accent
+	{
+	margin-top: 10px;
+	text-align: center;
+	margin-bottom: 20px;
+	font-style: italic;
+	color: #396088;
+	}
+
+.table_left_little
+{margin-left:20px;}
+
+	
+#footer
+	{
+	color: #95b1cd;
+	font-size: 10px;
+	margin: 20px 15px 20px 0px;
+	float: right;
+	}
+
+/* _____________________________ LINKS _____________________________*/
+
+a:link
+	{
+	color: #670001;
+	text-decoration: none;
+	}
+	
+a:visited
+	{
+	color: #670001;
+	text-decoration: none;
+	}	
+	
+a:hover, a:active
+	{
+	color: #95c9ff;
+	}	
+	
+a.hover:hover
+	{
+	position: relative;
+	top: 1px;
+	}
+	
+/* _____________________________ LISTS _____________________________*/
+
+ul#global_nav
+	{
+	float: left;
+	list-style-type: none;
+
+	}
+
+ul#global_nav li
+	{
+	float: left;
+	background-image: url(../images/light_nav_bkgd.jpg);
+	background-repeat: no-repeat;
+	height:154px;
+	width:144px;
+	padding: 40px 20px 0px 20px;
+	text-align: center;
+	}
+	
+ul#global_nav li#active
+	{
+	float: left;
+	background-image: url(../images/dark_nav_bkgd.jpg);
+	background-repeat: no-repeat;
+	}	
+	
+ul#global_nav li a:link, ul#global_nav li a:visited
+	{
+	color: #FFF;
+	font-size: 13px;
+	text-shadow:2px 2px 0 rgba(71, 69, 74, 0.7);
+	
+	}		
+	
+ul#global_nav li a:hover, ul#global_nav li a:active
+	{
+	color: #bfdcff;
+	
+	}	
+	
+
+
+/* _____________________________ TYPOGRAPHY _____________________________ */
+
+
+h1, /*h2, h3, h4, h5, h6, blockquote*/ 
+    {
+        margin-bottom:24px; 
+        font-family:Georgia,"Times New Roman",Times,serif;
+    }
+
+h1, h2, h3, h4, h5, h6, blockquote 
+    {
+        font-family:Georgia,"Times New Roman",Times,serif;
+    }
+
+h2
+    {
+        font-size: 14px;
+    }
+
+
+p 
+    {
+        margin-top:-10px;
+        margin-bottom:10px;
+    }
+
+.bold
+    {
+        font-weight: bold;
+    }
+
+.italic
+    {
+        font-style: oblique;
+    }
+    
+.shadow
+    {
+        text-shadow:2px 2px 0 rgba(71, 69, 74, 0.7);
+    }
+
+
+/* _____________________________ GENERAL _____________________________ */
+
+.floatLeft
+	{
+	    float:left;
+	    display: inline;
+	}
+
+.floatRight
+	{
+	    float:right;
+	    display: inline;
+	}
+
+.floatClear
+	{
+	    clear: both;
+	}
+
+.paddingLarge
+	{
+	    padding: 15px;
+	}
+
+.paddingSmall
+	{
+	    padding: 8px;
+	}	
+
+.imageLeft
+	{
+	    margin: 0px 10px 5px 0px;
+	}
+

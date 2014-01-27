@@ -1,0 +1,78 @@
+<html>
+	<head>
+		
+		<!-- CSS -->
+		<link rel="stylesheet" href="/static/css/style_vote.css" />
+
+		<!-- JS -->
+		<script src="/static/js/jquery.js"></script>
+		<script src="/static/js/browser_detect.js"></script>
+
+		<script type="text/javascript">
+
+		$(document).ready(function(){
+			$(".accordion .hide_text").hide();
+			
+			$(".accordion .show_text").click(function(){
+
+			  $(this).next(".hide_text").slideToggle("slow")
+			  $(this).toggleClass("active");});
+		});	
+			
+			
+		</script>
+		
+	</head>	
+	<body>
+		<div class="accordion">
+		<div id="container">
+			<div id="header">
+				<div id="logo"><img src="/static/images/logo.jpg" alt="Congressional Close-Up"/></div>
+			</div>
+			<div id="content_outer">
+
+				<div class="floatClear"></div>
+
+				<div id="content_inner2">
+					
+					{%for vote,descript,contr,ind,other in votes%}
+						{%autoescape off%}
+							{{descript}}
+						{%endautoescape%}
+						Type: {{vote.voteType}}<br>
+						{%if contr%}
+							<b>Has Contribution Data</b><br>
+						{%endif%}
+						{%if ind%}
+							<b>Has Industry Data</b><br>
+						{%endif%}
+						{%if other%}
+							<b>Has Other Data (Upcoming election, Relevant Committee)</b><br>
+						{%endif%}
+						<a href="http://127.0.0.1:8000/reports/session={{vote.bill.congress.number}}&amp;bill_prefix={{vote.bill.prefix}}&amp;bill_number={{vote.bill.number}}&amp;vote_number={{vote.number}}">Vote #{{vote.number}}, Bill #{{vote.bill.prefix}}.{{vote.bill.number}}</a><br><br>
+					<hr>	
+
+
+					{%endfor%}
+		
+				
+				
+		</div>
+	
+	</div>
+	
+	</div>
+	
+	
+	</div>	
+		
+		
+			
+	</body>
+	
+	
+	
+	
+	
+
+</html>

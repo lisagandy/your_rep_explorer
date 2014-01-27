@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Congressional Close-up</title>
+
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+<!-- CSS -->
+<link rel="stylesheet" href="{{refURL}}/static/css/style.css" />
+
+<!-- JS -->
+<script src="{{refURL}}/static/js/jquery.js"></script>
+<script src="{{refURL}}/static/js/browser_detect.js"></script>
+
+<!-- <script language="javascript"> 
+function toggle() {
+	
+	var eles = document.getElementsByClassName("close_vote");
+
+	for (var i = 0; i < eles.length; i++) {
+	    
+		if(eles[i].style.display == "block") {
+	    		eles[i].style.display = "none";
+	  	}
+		else {
+			eles[i].style.display = "block";
+		}
+	}//end of for loop	
+} 
+</script> -->
+
+
+
+</head>
+
+<body OnLoad="javascript:toggle()">
+
+<div id="container">
+	<div id="header">
+		<div id="logo"><a href="index.html"><img src="{{refURL}}/static/images/logo.jpg" alt="Congressional Close-Up"/></a></div>
+		<ul id="global_nav">
+			
+			{%if session == 112 and senate %}
+				<li id="active"><a href="/demo" >Votes in Senate<br> Session 112</a>
+				</li>
+			{%else%}
+				<li><a href="/demo" >Votes in Senate<br> Session 112</a>
+				<a href="/demo" class="hover read_story"></a></li>
+			{%endif%}
+			
+			{%if session == 111 and senate%}
+				<li id="active"><a href="/demo111" >Votes in Senate<br> Session 111</a>
+				</li>
+			{%else%}
+				<li><a href="/demo111" >Votes in Senate<br> Session 111</a>
+					<a href="/demo111" class="hover read_story"></a></li>
+			{%endif%}
+			
+			{%if session == 111 and not senate%}
+				<li id="active"><a href="/demo111_house" >Votes in House<br> Session 111</a>
+				</li>
+			{%else%}
+				<li><a href="/demo111_house" >Votes in House<br> Session 111</a>
+					<a href="/demo111_house" class="hover read_story"></a></li>
+			{%endif%}
+			
+			{%if session == 112 and not senate%}
+				<li id="active"><a href="/demo_house" >Votes in House<br> Session 112</a>
+				</li>
+			{%else%}
+				<li><a href="/demo_house" >Votes in House<br> Session 112</a>
+						<a href="/demo_house" class="hover read_story"></a></li>
+		
+			{%endif%}
+			
+			<!-- <li><a href="/choose_votes" >Search Votes by <br>Topic and Senator</a>
+						<a href="/choose_votes" class="hover read_story"></a>
+						</li> -->
+			
+			<li><a href="/about" >About<br>and API</a>
+			<a href="/about" class="hover read_story"></a>
+			</li>
+			
+		</ul>
+		<div id="right_nav"></div>
+	</div>
+	
+	<div class="floatClear"></div>
+	
+		
+	
+	<div id="content_outer">
+		<div id="content_inner">
+			<form id="option_form">
+				Sort by&nbsp;&nbsp;&nbsp;
+				<select>
+				  <option value="Date">Date of vote</option>
+				  <option value="PR_Rep">Party Pressure to Anomalous Republicans</option>
+				  <option value="PR_Dem">Party Pressure to Anomalous Democrats</option>
+				</select>
+				<br><br>
+				<em>We assume that votes which have the most party pressure display truly "anomalous votes", as it is common for anomalous voters to vote against party when party pressure is low</em>
+				<!-- <input type="checkbox" name="close_vote_checkbox" OnClick="javascript:toggle()" checked="checked"/> --><!--&nbsp;Close Votes Only (Passed/Failed by < 7%)--><br>
+		</div>
+		<br>
+		<div id="content_inner">
+			
+			{%for vote,descript,lsInfTypes,closeVote in votes%}
+			  		
+					{%if lsInfTypes|length > 0%}
+						<!-- {% if not closeVote%}
+														<div class="close_vote" style="display: block;">
+												{%endif%} -->
+						<div style="display:block">
+						<hr>
+						<br>
+						{%autoescape off%}
+						{{descript}}
+						{%endautoescape%}
+						<br>
+						{%for type in lsInfTypes%}
+					
+							{%if type == "no points" %}
+								<b>No points</b>
+							{%endif%}
+							
+							{%if type == "contribution" %}
+								<img alt="Campaign Contribution Influence" title="Campaign Contribution Influence" width="40" height="40" src="{{refURL}}/static/images/contributions.png" />
+							{%endif%}
+				
+							{%if type == "company"%}
+								<img alt="Companies Gave Money and Had a Stance" title="Companies Gave Money and Had a Stance" width="40" height="40" src="{{refURL}}/static/images/company_stance.png"  />
+							{%endif%} 
+				
+							{%if type == "industry"%}
+								<img alt="Local Industry Influence" title="Local Industry Influence"  width="40" height="40" src="{{refURL}}/static/images/industry.png" />
+							{%endif%}
+				
+							{%if type == "committee"%}
+								<img alt="Committee Membership Influence"  title="Committee Membership Influence" width="40" height="40" src="{{refURL}}/static/images/committee.png" />
+							{%endif%}
+				
+							{%if type == "statediff"%}
+								<img alt="Influence of Dual Party State" title="Influence of Dual Party State" width="40" height="40" src="{{refURL}}/static/images/diff_state_rep.png" />
+							{%endif%}
+				
+							{%if type == "election"%}
+								<img alt="Upcoming Election Influence" title="Upcoming Election Influence" title="Upcoming Election Influence" width="40" height="40" src="{{refURL}}/static/images/election.png" />
+							{%endif%}
+				
+						{%endfor%}
+						<br><br>
+						{%if not closeVote%}
+							</div>
+						{%endif%}
+						<!-- the if below is to check if there are influences... -->
+				{%endif%}		
+				{%endfor%}
+		
+		</div>
+	</div>
+	<div class="floatClear"></div>
+	<div id="footer">
+		&copy; Copyright 2010 - Congressional Close-Up
+	</div>
+	<div class="floatClear"></div>
+</div>
+</body>
+
+</html>

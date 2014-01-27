@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Congressional Close-up</title>
+
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+<!-- CSS -->
+<link rel="stylesheet" href="{{refURL}}/static/demo/css/style.css" />
+
+<!-- JS -->
+<script src="{{refURL}}/static/demo/js/jquery.js"></script>
+<script src="{{refURL}}/static/demo/js/browser_detect.js"></script>
+<link rel="stylesheet" href="{{refURL}}/static/css/jquery.ui.all.css">
+<script src="{{refURL}}/static/js/jquery.js"></script>
+<script src="{{refURL}}/static/js/browser_detect.js"></script>
+<script src="{{refURL}}/static/js/jquery.ui.core.js"></script>
+<script src="{{refURL}}/static/js/jquery.ui.widget.js"></script>
+<script src="{{refURL}}/static/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="{{refURL}}/static/js/choose_votes.js"></script>
+	<script>
+	$(function() {
+			$( "#datepicker" ).datepicker();
+			$( "#datepicker2" ).datepicker();
+		});
+		
+
+			$(document).ready(function(){
+				$(".accordion .hide_text").hide();
+
+				$(".accordion .show_text").click(function(){
+				  //alert('here');
+				  $(this).next(".hide_text").slideToggle("slow")
+				  $(this).toggleClass("active");});
+			});	
+			
+			var _gaq = _gaq || [];
+			  _gaq.push(['_setAccount', 'UA-26325163-1']);
+			  _gaq.push(['_trackPageview']);
+
+			  (function() {
+			    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			  })();
+
+
+
+	</script>
+
+
+</head>
+
+<body>
+
+<div id="container">
+	<div id="header">
+		<div id="logo"><a href="index.html"><img src="{{refURL}}/static/demo/images/logo.jpg" alt="Congressional Close-Up"/></a></div>
+		<ul id="global_nav">
+			
+			HERE
+				
+			<li><a href="/demo" >Votes in Congressional<br> Session 112</a>
+			<a href="/demo" class="hover read_story"></a></li>
+			
+			<li><a href="/demo111" >Votes in Congressional<br> Session 111 <br> </a>
+					<a href="/demo111" class="hover read_story"></a></li>
+			
+			<li><a href="/choose_votes_senator" >Search Votes by <br>Senator</a>
+			<a href="/choose_votes_senator" class="hover read_story"></a>
+			</li>
+			
+			<li><a href="/choose_votes" >Search Votes by <br>Bill/Amendment<br> Topic</a>
+			<a href="/choose_votes" class="hover read_story"></a>
+			</li>
+			
+			<li><a href="/about" >About<br>and API</a>
+			<a href="/about" class="hover read_story"></a>
+			</li>
+			
+			</li>
+			
+		</ul>
+		<div id="right_nav"></div>
+	</div>
+	
+	<div class="floatClear"></div>
+
+	
+<div id="content_outer">
+	<div id="content_inner2">
+		<div id="smaller">
+		<h2>Find Votes by Relevant Contributions</h2>
+		<p>Search for votes by the date of the vote, the Senator who voted against party, and by the topic/subtopic of the bill
+			or amendment that the vote dealt with</p>
+		<form name="voteForm">
+			<div id="mini_descript">Date
+			</div>
+			<div id="descript">Date vote was cast
+				</div> 
+			 <div id="div3">
+				<select id="dateSelectSector" name="dateSelectSector" onChange="loadFromDateSector();">
+				{%for textDate,dateVal in time_choices%}
+					<option value="{{dateVal}}">{{textDate}}</option>
+				
+				{%endfor%}	
+				</select>
+				
+			</div>
+			 <div id="hide_div2">
+			 	<div id="div3">
+						<input type="text" id="datepickerSector" onChange="loadFromDatepickerSector();">&nbsp;&nbsp;&nbsp;
+						<input type="text" id="datepickerSector2" onChange="loadFromDatepickerSector();">
+				</div>
+			</div>
+			
+				
+				<div id="mini_descript">Interest Group</div>
+				<div id="descript">Category of contributor</div>
+				<div id="div3">
+					<select id="sectorSelect" name="sectorSelect" onChange="loadFromSector(); ">
+						<option value="all">All Sectors</option>
+						{%for sector in lsSectors%}
+							<option value="{{sector.code}}">{{sector.name}}</option>
+						{%endfor%}	
+					</select>
+				</div>	
+				<div id="div3">
+					<select id="industrySelect" name="industrySelect" onChange="loadFromIndustry();">
+					</select>
+				</div>
+				<div id="div3">
+					<select id="businessSelect" name="businessSelect">
+					</select>
+				</div>
+				
+				
+			<div id="mini_descript">
+			Senators 
+			</div>
+			<div id="descript">Senators who voted against party</div>
+			<div id="div3">
+				<select id="senatorSelectSector" style="width:200px" name="senatorSelectSector" multiple size=10>
+											{%for senatorName,senatorID in lsSenators%}
+												<option value="{{senatorID}}">{{senatorName}}</option>
+											{%endfor%}	
+										</select>
+			</div>
+			<div id="div4">(Ctrl+Click to select more than one):</div>
+			<br>
+			<div id="div3"><a href="#" onclick="loadContrForm();" class="myButton">Find votes</a></div>
+			<br>
+		</form>
+		<div id="html_descript"></div>
+		</div>
+		
+		
+		
+			</div>
+		</div>
+		<div class="floatClear"></div>
+		<div id="footer">
+			&copy; Copyright 2010 - Congressional Close-Up
+		</div>
+		<div class="floatClear"></div>
+</div>
+</body>
+
+</html>

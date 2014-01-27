@@ -1,0 +1,776 @@
+<html>
+	<head>
+	
+
+		<!-- JS -->
+		
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript" src="{{refURL}}/static/js/jquery.js"></script>
+		<script type="text/javascript" src="{{refURL}}/static/js/browser_detect.js"></script>
+        <script type="text/javascript" src="{{refURL}}/static/js/jquery.tablesorter.js"></script> 
+		<script type="text/javascript" src="{{refURL}}/static/js/csspopup.js"></script>
+			<!-- CSS -->
+			<link rel="stylesheet" href="{{refURL}}/static/css/style_vote.css" />
+			<link rel="stylesheet" href="{{refURL}}/static/css/blue/style.css" />	
+			<script src="{{refURL}}/static/js/jquery.ui.core.js"></script>
+			<script src="{{refURL}}/static/js/jquery.ui.widget.js"></script>
+			<script src="{{refURL}}/static/js/jquery.ui.tabs.js"></script>
+			<link rel="stylesheet" href="{{refURL}}/static/css/style_tabs.css">
+			<link rel="stylesheet" href="{{refURL}}/static/js/jquery.ui.all.css">
+				<script>
+					$(function() {
+						$( "#tabs" ).tabs();
+					});
+				</script>
+	
+		
+       	<script type="text/javascript">
+       		       	$(document).ready(function(){
+       	       			$(".accordion .hide_text").hide();
+						$(".accordion .show_text").click(function(){
+						$(this).next(".hide_text").slideToggle("slow")
+       	       			$(this).toggleClass("active");});
+						$("table").tablesorter(); 
+       	       		  });	
+       	       		       							
+       	
+				
+					google.load('visualization', '1.0', {'packages':['corechart']});
+					// Set a callback to run when the Google Visualization API is loaded.
+					google.setOnLoadCallback(drawVotingCharts);
+					{%if repContr|length > 0%}
+						google.setOnLoadCallback(drawContrCharts);
+					{%endif%}
+					google.setOnLoadCallback(drawStanceCharts);
+					
+					function drawContrCharts(){
+						{%for graphing_data in lsContrTables%}
+							var data{{forloop.counter}}=new google.visualization.DataTable();
+							data{{forloop.counter}}.addColumn('string','Business');
+							data{{forloop.counter}}.addColumn('number','Amount Money');
+							{%for bus,amtBus in graphing_data%}
+		data{{forloop.parentloop.counter}}.addRow([
+								{%autoescape off%}'{{bus.name}}'{%endautoescape%}
+								
+								,{{amtBus}}]);
+							{%endfor%}
+							
+							var options{{forloop.counter}}={
+								title: 'Amount Money for {{graphing_data.0.0.industry.sector.officialName}} Sector',
+								width: '500'
+							};
+							
+							var formatter = new google.visualization.NumberFormat(
+							      {prefix: '$'});
+							formatter.format(data{{forloop.counter}}, 1);
+							
+							var chart{{forloop.counter}} = new google.visualization.PieChart(document.getElementById('contr_chart_div{{forloop.counter}}'));	
+							chart{{forloop.counter}}.draw(data{{forloop.counter}},options{{forloop.counter}});	
+						{%endfor%}
+						
+					}//end of function for drawing contribution charts
+
+					function drawStanceCharts(){
+						
+						{%for amtInt,amtIntOpp,rep,repStance,totalAmt,totalAmtOpp,sectorName,breakdownFor,breakdownAgainst in repOrgs%}					
+							
+							{%if breakdownFor.items%}
+								var data=new google.visualization.DataTable();
+								data.addColumn('string','Organization Name');
+								data.addColumn('number','Amount Money');
+								{%for orgst,amount in breakdownFor.items%}
+									data.addRow([
+									{%autoescape off%}'{{orgst.org.orgName}}'{%endautoescape%}
+								
+									,{{amount}}]);
+								{%endfor%}
+							
+								var options={
+									title: 'Amount Money for {{sectorName}} Sector',
+									width: '500'
+								};
+							
+								var formatter = new google.visualization.NumberFormat(
+								      {prefix: '$'});
+								formatter.format(data, 1);
+							
+								// var chart = new google.visualization.PieChart(document.getElementById('org_stance_chart_div_{% for word in sectorName.split %}{{word}}{% if not forloop.last %}_{% endif %}{% endfor %}_{{rep.lastName}}_for'));
+								var chart = new google.visualization.PieChart(document.getElementById('org_stance_chart_div_{{sectorName}}_{{rep.lastName}}_for'));	
+								chart.draw(data,options);	
+						{%endif%}
+						
+						{%if breakdownAgainst.items%}
+							var data=new google.visualization.DataTable();
+							data.addColumn('string','Organization Name');
+							data.addColumn('number','Amount Money');
+							{%for orgst,amount in breakdownAgainst.items%}
+								data.addRow([
+								{%autoescape off%}'{{orgst.org.orgName}}'{%endautoescape%}
+							
+								,{{amount}}]);
+							{%endfor%}
+						
+							var options={
+								title: 'Amount Money for {{sectorName}} Sector',
+								width: '500'
+							};
+						
+							var formatter = new google.visualization.NumberFormat(
+							      {prefix: '$'});
+							formatter.format(data, 1);
+						
+							var chart = new google.visualization.PieChart(document.getElementById('org_stance_chart_div_{{sectorName}}_{{rep.lastName}}_against'));		
+							chart.draw(data,options);	
+					{%endif%}
+						
+					 {%endfor%}	
+					}//end of function for drawing contribution charts
+
+
+			        function drawVotingCharts() {
+
+					        // Create the data table.
+					        var data1 = new google.visualization.DataTable();
+					        {%for colArr in lsVoteChartCols%}
+								data1.addColumn('{{colArr.0}}','{{colArr.1}}');
+							{%endfor%}
+
+							{%for dataArr in lsVoteDemRows%}
+								data1.addRow(['{{dataArr.0}}',{{dataArr.1}}]);
+							{%endfor%}
+
+							// Create the data table.
+					        var data2 = new google.visualization.DataTable();
+					        {%for colArr in lsVoteChartCols%}
+								data2.addColumn('{{colArr.0}}','{{colArr.1}}');
+							{%endfor%}
+
+							{%for dataArr in lsVoteRepRows%}
+								data2.addRow(['{{dataArr.0}}',{{dataArr.1}}]);
+							{%endfor%}
+
+							// Create the data table.
+					        var data3 = new google.visualization.DataTable();
+					        {%for colArr in lsVoteChartCols%}
+								data3.addColumn('{{colArr.0}}','{{colArr.1}}');
+							{%endfor%}
+
+							{%for dataArr in lsVoteOtherRows%}
+								data3.addRow(['{{dataArr.0}}',{{dataArr.1}}]);
+							{%endfor%}
+
+					        // Set chart options
+					        var options1 = {'title':'Democrat Voting',
+					                       'width':200,
+					                       'height':200,
+										   'legend':{'position':'none'},
+											'fontName':'Lucida Sans Unicode',
+											'fontSize':12};
+							var options2 = {'title':'      Republican Voting',
+									       'width':200,
+									       'height':200,
+										   'legend':{'position':'none'},
+											'fontName':'Lucida Sans Unicode',
+											'fontSize':12};
+							var options3 = {'title':'      Other Party Voting',
+											'width':200,
+											'height':200,
+											'legend':{'position':'none'},
+											'fontName':'Lucida Sans Unicode',
+											'fontSize':12};
+					        // Instantiate and draw our chart, passing in some options.
+					        var chart1 = new google.visualization.PieChart(document.getElementById('chart_div_voting_dem'));
+							var chart2 = new google.visualization.PieChart(document.getElementById('chart_div_voting_rep'));
+					        var chart3 = new google.visualization.PieChart(document.getElementById('chart_div_voting_other'));
+							chart1.draw(data1, options1);
+							chart2.draw(data2, options2);
+							chart3.draw(data3, options3);
+
+				}//end of function									
+
+		</script>
+	
+	<br>
+	</head>	
+	<body>
+		<div class="accordion">
+		<div id="container">
+			<div id="header">
+				<div id="logo"><img src="{{refURL}}/static/images/logo.png" alt="Congressional Close-Up"/></div>
+			</div>
+			<div id="content_outer">
+
+				<div class="floatClear"></div>
+
+				<div id="content_inner2">
+
+			{%if not vote.amendment%}
+			<h2>Bill Information</h2>
+				<hr>
+				<b>Bill number: </b>{{vote.bill.prefix.upper}}.{{vote.bill.number}}<br>
+				<b>Bill title:</b> {{vote.bill.title}}<br>
+				<b>Bill sponsor:</b> {{vote.bill.sponsor.officialName}}<br>
+					<b>Bill summary:</b><br>
+					{%for descript  in vote.bill.twoPartSummary%}
+						{%if forloop.first%}
+							{{descript}}
+					
+						{%else%}
+							{%if descript%}
+								<div class="show_text"><a><span class="hide_link">Read entire summary...</span></a></div>
+								<div class="hide_text">{{descript}}</div>
+						
+							{%endif%}
+						{%endif%}
+						
+					{%endfor%}
+				
+				{%if vote.bill.subtopics.count > 0%}
+					<br><b>Bill topics and subtopics: </b><br>
+					{%for topic,subtopics in vote.bill.groupedByTopic.items%}
+								<div id="topic">Topic: {{topic.name}}</div>
+								{%for sub in subtopics%}
+									<div id="subtopic">Subtopic:{{sub.name}}</div>
+								{%endfor%}
+
+					{%endfor%}
+				{%endif%}
+				
+				<br>	
+			{%else%}
+			
+				<h2>Amendment Information</h2>
+				<hr>
+				
+				<b>Amendment number: </b>{{vote.amendment.number}}<br>
+				<b>Amendment sponsor: </b>{{vote.amendment.sponsor.officialName}}<br>
+				<b>Amendment description: </b>{{vote.amendment.cleanedDescript}}<br>
+				<br>
+				{%if vote.amendment.subtopics.count > 0%}
+					<b>Amendment topics and subtopics: *</b><br>
+						
+					{%for topic,subtopics in vote.amendment.groupedByTopic.items%}
+								<div id="topic">Topic: {{topic.name}}</div>
+								{%for sub in subtopics%}
+									<div id="subtopic">Subtopic:{{sub.name}}</div>
+								{%endfor%}
+
+					{%endfor%}
+				
+
+
+				{%endif%}
+			{%endif%}	
+		
+				<h2>Vote Information</h2>
+					<hr>
+					<b>Congress number:</b>{{vote.bill.congress.number}}<br>
+					<b>Vote number:</b> {{vote.number}}<br>
+					<b>Vote date:</b> {{vote.dateVote|date:"M d, Y"}}<br>
+					<b>Vote type:</b> {{vote.voteType.voteType}}<br>
+					<b>Vote question:</b> {{vote.question}}<br>
+				<b>	Vote result:</b> {{vote.result}}<br>
+					<br>
+					<b>Voting statistics:</b>
+					
+						<div id="tabs">
+							<ul>
+								<li><a href="#tabs-2">Charts</a></li>
+								<li><a href="#tabs-1">Table</a></li>
+							</ul>
+							
+							<div id="tabs-2" style="height:200px;">
+								<div id="chart_div_voting_dem" class="chart"></div>
+								<div id="chart_div_voting_rep" class="chart"></div>
+								<div id="chart_div_voting_other" class="chart"></div>
+							</div>
+					
+							<div id="tabs-1" style="height:200px;">
+									<br>
+									<table class="tablesorter" width="375px">
+									<thead>
+									<tr>
+									<th>Vote/Party</th><th>Democrats</th><th>Republicans</th><th>Other</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr>
+									<td>Aye</td><td>{{vote.numDemsAye}}</td><td>{{vote.numRepsAye}}</td><td>{{vote.numOtherAye}}</td>
+									</tr>
+									<tr>
+									<td>Nay</td><td>{{vote.numDemsNay}}</td><td>{{vote.numRepsNay}}</td><td>{{vote.numOtherNay}}</td>
+									</tr>
+									<tr>
+									<td>Present</td><td>{{vote.numDemsPresent}}</td><td>{{vote.numRepsPresent}}</td><td>{{vote.numOtherPresent}}</td>
+									</tr>
+									<tr>
+									<td>No Vote</td><td>{{vote.numDemsNV}}</td><td>{{vote.numRepsNV}}</td><td>{{vote.numOtherNV}}</td>
+									</tr>
+									</tbody>
+									</table>
+							</div>
+					</div> <!--END OF TABS DIV-->
+					<div style="clear:both;"></div>	
+			
+			{%if lsTop5Dem or lsTop5Rep%}
+				
+				<h2>Top {%if lsTop5Dem|length|add:lsTop5Rep|length > 5%}5{%endif%} Senators Who Voted Against Party (in terms of influences)</h2>
+				
+				<hr>
+				<i>It is very common in today's political climate for Senators to vote with their party.  Therefore, when a Senator
+					votes against their party, Congressional Close Up examines what outside influences might have
+					influenced their vote.  Congressional Close Up looks at the top {%if lsTopDem5|length|add:lsTopRep5|length >= 5%}5{%endif%} Senators who had large outside influences trying to sway their vote.<br><br></i>
+				{%if lsTop5Dem|length > 0%}
+					<table class="tablesorter" width="600px">
+						<thead>
+						<tr>
+						<th width="200px">Democrat Senator</th>
+						<th width="200px">Influences</th>
+						<th width="100px">Senator's Vote</th>
+						<th width="100px">Majority Democrat Party Vote</th>
+						</tr>
+						</thead>
+						<tbody>
+					{%for repinf in lsTop5Dem%}
+						<tr>
+						<td>{{repinf.0.officialName}}</td>
+						<td>
+							{%for stuff in repinf.1.0%}
+
+								{%if stuff == 'state_diff'%}
+									<img alt="Influence of Dual Party State" title="Influence of Dual Party State" width="30" height="30" src="{{refURL}}/static/images/diff_state_rep.png" />
+								{%endif%}
+								{%if stuff == 'committee'%}
+									<img alt="Committee Membership Influence"  title="Committee Membership Influence" width="30" height="30" src="{{refURL}}/static/images/committee.png" />
+								{%endif%}
+								{%if stuff == 'contribution' %}
+									<img alt="Campaign Contribution Influence" title="Campaign Contribution Influence" width="30" height="30" src="{{refURL}}/static/images/contributions.png" />
+								{%endif%}
+				
+								{%if stuff == 'company' %}
+									<img alt="Companies Gave Money and Had a Stance" title="Companies Gave Money and Had a Stance" width="30" height="30" src="{{refURL}}/static/images/company_stance.png"  />
+								{%endif%} 
+				
+								{%if stuff == 'industry'%}
+									<img alt="Local Industry Influence" title="Local Industry Influence"  width="30" height="30" src="{{refURL}}/static/images/industry.png" />
+								{%endif%}
+							
+								{%if stuff == 'election'%}
+									<img alt="Upcoming Election Influence" title="Upcoming Election Influence" width="30" height="30" title="Upcoming Election Influence" width="40" height="40" src="{{refURL}}/static/images/election.png" />
+								{%endif%}
+							
+							{%endfor%}
+						</td>
+						<td>{{repinf.1.1}}</td>
+						<td>{{repinf.1.2}}</td>
+						</tr>
+					{%endfor%}
+					</tbody>
+					</table>
+			{%endif%}
+			{%if lsTop5Rep|length > 0%}
+				{%if lsTop5Dem|length > 0%}<br><br>{%endif%}
+				<table class="tablesorter" width="600px">
+					<thead>
+					<tr>
+						<th width="200px">Republican Senator</th>
+						<th width="200px">Influences</th>
+						<th width="100px">Senator's Vote</th>
+						<th width="100px">Majority Republican Party Vote</th>
+					</tr>
+					</thead>
+					<tbody>
+				{%for repinf in lsTop5Rep%}
+					<tr>
+					<td>{{repinf.0.officialName}}</td>
+					<td>
+						{%for stuff in repinf.1.0%}
+
+							{%if stuff == 'state_diff'%}
+								<img alt="Influence of Dual Party State" title="Influence of Dual Party State" width="30" height="30" src="{{refURL}}/static/images/diff_state_rep.png" />
+							{%endif%}
+							{%if stuff == 'committee'%}
+								<img alt="Committee Membership Influence"  title="Committee Membership Influence" width="30" height="30" src="{{refURL}}/static/images/committee.png" />
+							{%endif%}
+							{%if stuff == 'contribution' %}
+								<img alt="Campaign Contribution Influence" title="Campaign Contribution Influence" width="30" height="30" src="{{refURL}}/static/images/contributions.png" />
+							{%endif%}
+			
+							{%if stuff == 'company' %}
+								<img alt="Companies Gave Money and Had a Stance" title="Companies Gave Money and Had a Stance" width="30" height="30" src="{{refURL}}/static/images/company_stance.png"  />
+							{%endif%} 
+			
+							{%if stuff == 'industry'%}
+								<img alt="Local Industry Influence" title="Local Industry Influence"  width="30" height="30" src="{{refURL}}/static/images/industry.png" />
+							{%endif%}
+						
+							{%if stuff == 'election'%}
+								<img alt="Upcoming Election Influence" title="Upcoming Election Influence" width="30" height="30" title="Upcoming Election Influence" width="40" height="40" src="{{refURL}}/static/images/election.png" />
+							{%endif%}
+						
+						{%endfor%}
+					</td>
+					<td>{{repinf.1.1}}</td>
+					<td>{{repinf.1.2}}</td>
+					</tr>
+				{%endfor%}
+				</tbody>
+				</table>
+		{%endif%}
+			{%endif%}
+			
+			{%if repContr|length > 0%}
+				<h2>Relevant Campaign Contributions</h2>
+				<hr>
+				<i>Campaign Contributions from interest groups that are affected by this legislation might have influenced votes</i>
+				<br><br>	
+				<table class="tablesorter" width="700px">
+				<thead>
+				<tr>
+					<th>Senator</th>
+					<th>Interest Group Sector</th>
+					<th>Amount<br> Money</th>
+					<th>Percentage of All<br>Campaign Contrs.</th>
+					<!-- <th>Rank Money <br> Senator/<br>All Senators</th>
+										<th>Campaign <br>Contribution <br>Start/End Date</th> -->
+				</thead>
+				<tbody>
+				</tr>
+				{%for rep,sector,total,buses,percent in repContr %}
+					<tr>
+					<td>{{rep.officialName}}</td>
+					
+						<td>{{sector.officialName}}<br>
+							<a class="fake_link" onclick="popup('popUpDiv{{forloop.counter}}')">(View individual business info here)</a>
+							<div class="popUpDiv" id="popUpDiv{{forloop.counter}}" style="display:none;">
+								<a class="fake_link" onclick="popup('popUpDiv{{forloop.counter}}')">Close Window</a>
+								<div id="contr_chart_div{{forloop.counter}}"></div>
+							</div>
+						</td>
+					<td>{{total}}</td>
+					<td>{{percent|floatformat:2}}%</td>
+					<!-- <td>{{rc.startDate|date:"m/d/Y"}}-<br>{{rc.endDate|date:"m/d/Y"}} -->
+					</tr>
+				
+				{%endfor%}
+				</tbody>
+				</table>
+			  
+			  <div id="blanket" style="display:none;"></div>
+			  
+			{%endif%}
+			
+			{%if repOrgs|length > 0%}
+				<h2>Influenced by Company Stances</h2>
+				<hr>
+				<i>A stance on the related bill combined with campaign contributions might have affected votes</i>
+				<br><br>	
+				<table class="tablesorter" width="700px">
+				<thead>
+				<tr>
+					<th>Senator</th>
+					<th>Company Sector</th>
+					<th>Senator Stance</th>
+					<th>Total Amt. of Money <br>from Companies For Bill</th>
+					<th>Total Amt. of Money <br>from Companies Against Bill</th>
+				</thead>
+				<tbody>
+				</tr>
+
+				{%for amtIntFor,amtIntAgainst,rep,repStance,totalAmtFor,totalAmtAgainst,sectorName,breakdownFor,breakdownAgainst in repOrgs %}
+					<tr>
+					<td>{{rep.officialName}}</td>
+										
+					<td>
+						{{sectorName.officialName}}
+					</td>
+					
+					<td>
+						{%if repStance%}
+							For bill
+						{%else%}
+							Against bill
+						{%endif%}
+					</td>
+					<td>
+							{{totalAmtFor}}
+							{%if amtIntFor > 0%}
+								<br>
+								<a class="fake_link" onclick="popup('popUpDiv_{{sectorName}}_{{rep.lastName}}_for')">(View company contributions here)</a>
+								<div class="popUpDiv" id="popUpDiv_{{sectorName}}_{{rep.lastName}}_for" style="display:none;">
+									<a class="fake_link" onclick="popup('popUpDiv_{{sectorName}}_{{rep.lastName}}_for')">Close Window</a>
+									<div id="org_stance_chart_div_{{sectorName}}_{{rep.lastName}}_for"></div>
+								</div>
+							 {%endif%}
+						
+						</td>
+					<td>	
+							{{totalAmtAgainst}}
+							{%if amtIntAgainst > 0%}
+								<br>
+								<a class="fake_link" onclick="popup('popUpDiv_{{sectorName}}_{{rep.lastName}}_against')">(View company contributions here)</a>
+								<div class="popUpDiv" id="popUpDiv_{{sectorName}}_{{rep.lastName}}_against" style="display:none;">
+									<a class="fake_link" onclick="popup('popUpDiv_{{sectorName}}_{{rep.lastName}}_against')">Close Window</a>
+									<div id="org_stance_chart_div_{{sectorName}}_{{rep.lastName}}_against"></div>
+								</div>
+							 {%endif%}
+							
+						
+						</td>
+					
+					</td>
+					</tr>
+					
+				</td>
+
+				{%endfor%}
+				</tbody>
+				</table>
+				<div id="blanket" style="display:none;"></div>
+			{%endif%}
+			
+			
+			
+			
+			{%if naicsInd|length > 0%}
+			<h2>Relevant Local Industries</h2>
+			<hr>
+			<i>Local industries that are affected by the proposed legislation
+				might have influenced votes.<br><br></i>
+			<table class="tablesorter">
+				<thead>
+				<tr>
+					<th>Senator</th>
+					<th>Industry</th>
+					<th>State</th>
+					<th>Percent of <br>State Employed</th>
+					<th>Rank # Employees<br> This State/All States</th>
+					<th>Census report <br>Begin/End Date</th>
+				</tr>
+			 <tbody>
+			 
+			 {%for indObj in naicsInd%}
+					<tr>
+						<td>{{indObj.0.rep.officialName}}</td>
+	 					<td>{{indObj.0.naicsLocale.naicsIndustry.name}}</td>
+	 					<td>{%if indObj.0.rep.state%}{{indObj.0.rep.state}}{%else%}{{indObj.0.rep.district.state.abbrev}}{%endif%}</td>
+	 					<td>{{indObj.0.percentage|floatformat:2}}%</td>
+	 					<td>{{indObj.0.rank}}/50<br>
+	 						<a class="fake_link" onclick="popup('popUpDivInd{{forloop.counter}}')">(View industry info here)</a>
+	 							 <div class="popUpDivInd" id="popUpDivInd{{forloop.counter}}" style="display:none;">
+	 							 	<a class="fake_link" onclick="popup('popUpDivInd{{forloop.counter}}')">Close Window</a>
+	 							 	<div id="holder">
+	 								<img src="http://chart.apis.google.com/chart?chxr=0,0,{{indObj.3}}&chxt=y&chbh=a,4,4&chs=350x225&cht=bvg&chco=FF2000,FF9900,FFCC33,0000FF,80C65A&chds=0,{{indObj.3}},0,{{indObj.3}},0,{{indObj.3}},0,{{indObj.3}},0,{{indObj.3}}&chd=t:{%for percent in indObj.2%}{{percent}}{%if not forloop.last%}|{%endif%}{%endfor%}&chdl={%for stateName in indObj.1%}{{stateName}}{%if not forloop.last%}|{%endif%}{%endfor%}&chtt=Top+5+States+with|{% for word in indObj.0.naicsLocale.naicsIndustry.name.split %}{{word}}{% if not forloop.last %}+{% endif %}{% endfor %}+industry&chts=000000,12.5" width="350" height="225" alt="Top 5 industries" />
+	 								</div>
+	 							</div>
+	 					</td>
+	 					<td>Q{{indObj.0.naicsLocale.beginQuarter}}/{{indObj.0.naicsLocale.beginYear}}-
+	 						Q{{indObj.0.naicsLocale.endQuarter}}/{{indObj.0.naicsLocale.endYear}}
+	 						</td>
+
+					</tr>
+					
+			 {%endfor%}
+			 </tbody>
+			 </table>
+				<div id="blanket" style="display:none;"></div>
+			{%endif%}
+			
+			
+			{%if relComm|length > 0%}
+						<h2>Relevant Committee Memberships</h2>
+						<hr>
+						<i>Membership in committees that are related to this legislation might have influenced votes </i>
+						<br><br>
+						<table class="tablesorter" width="500px">
+						<thead>
+						<tr>
+							<th>Senator</th>
+							<th>Committee</th>
+							<th>Membership Type</th>
+						</tr>
+						</thead>
+						<tbody>
+						{%for obj in relComm%}
+							<tr>
+								<td>{{obj.rep.officialName}}</td>
+								<td>{{obj.committee.name}}</td>
+
+									{%if obj.isChair%}
+										<td>Chairman</td>
+									{%endif%}
+									{%if obj.isViceChair%}
+										<td>Vice-Chairman</td>
+									{%endif%}
+									{%if obj.isRankingMember%}
+										<td>Ranking Member</td>
+									{%endif%}
+							</tr>
+						{%endfor%}
+					</tbody>
+					</table>
+			{%endif%}
+			
+			
+			{%if predElect|length > 0%}
+				<h2>Upcoming Elections</h2>
+				<hr>
+				<i>An upcoming election might have influenced this vote</i>
+				<table class="tablesorter">
+				<thead>
+				<tr class="bold">
+					<th>Senator</th>
+					<th>Election Prediction</th>
+					<th>Election Date</th>
+				</tr>
+				</thead>
+				<tbody>
+				{%for elect in predElect%}
+					<tr>
+						<td>{{elect.predElection.rep.officialName}}</td>
+						<td>{{elect.predElection.longPred}}</td>
+						<td>{{elect.predElection.election.date|date:"m/d/Y"}}</td>
+					</tr>
+				
+				{%endfor%}
+				</tbody>
+				</table>
+			{%endif%}
+			
+			{%if pviReportRep|length > 0 or pviReportDem|length > 0 %}
+				<h2>State Political Leanings vs. Party</h2>
+				<hr>
+				<i>At times a state might vote for a Republican but have some leanings toward liberal policies or
+					the state might vote for a Democrat and have some conservative tendencies.  This situation might
+					cause a Senator to vote with the other party on occasion. For further explanation of this category please see the
+					bottom of the page.</i>  
+					<br><br>
+				{%if pviReportRep|length > 0%}
+					<table width="425px" class="tablesorter">
+					<thead>
+					<tr class="bold">
+						<th width="160px">Republican <br>Senator</th>
+						<th width="100px">State</th>
+						<th>State PVI Score<br>/Avg. GOP PVI Score</th>
+					</tr>
+					</thead>
+					<tbody>
+					{%for pviAll in pviReportRep%}
+						<tr>
+							<td>{{pviAll.0.rep.officialName}}</td>
+							<td>{{pviAll.0.rep.state}}</td>
+							<td>
+								{{pviAll.0.properStrScore}}
+								/{{pviAll.0.properStrAvg}}<br><a href="#thumb" class="thumbnail">View Chart Here<span><img  src="http://chart.apis.google.com/chart?chxl=0:|GOP| Dem&chxt=y&chs=300x75&cht=gm&chco=000000|BBCCED,FF0000|0000FF&chds=0,100&chd=t:{{pviAll.1}},{{pviAll.2}}&chdl={{pviAll.0.rep.state.name.title}} ({{pviAll.0.properStrScore|urlencode}})|Avg. GOP State ({{pviAll.0.properStrAvg|urlencode}})&" width="300" height="75" alt="" /></span></a></td>
+						</tr>
+					{%endfor%}
+					
+					</tbody>
+					</table>
+					
+				{%endif%}
+				
+				{%if pviReportDem|length > 0%}
+					{%if pviReportRep|length > 0%}
+						<br>
+					{%endif%}
+					
+					<table width="425px" class="tablesorter">
+					<thead>
+					<tr class="bold">
+						<th width="160px">Democrat <br>Senator</th>
+						<th width="100px">State</th>
+						<th>State PVI Score<br>/Avg. Democrat PVI Score</th>
+					</tr>
+					</thead>
+					<tbody>
+					{%for pviAll in pviReportDem%}
+						<tr>
+							<td>{{pviAll.0.rep.officialName}}</td>
+							<td>{{pviAll.0.rep.state}}</td>
+							<td>
+								{{pviAll.0.properStrScore}}
+								/{{pviAll.0.properStrAvg}}<br><a href="#thumb" class="thumbnail">View Chart Here<span><img  src="http://chart.apis.google.com/chart?chxl=0:|GOP| Dem&chxt=y&chs=300x75&cht=gm&chco=000000|BBCCED,FF0000|0000FF&chds=0,100&chd=t:{{pviAll.1}},{{pviAll.2}}&chdl={{pviAll.0.rep.state.name.title}} ({{pviAll.0.properStrScore|urlencode}})|Avg. GOP State ({{pviAll.0.properStrAvg|urlencode}})&chdls=000000,12" width="300" height="75" alt="" /></span></a>
+									
+									
+									</td>
+						</tr>
+					{%endfor%}
+					</tbody>	
+					</table>
+					
+				{%endif%}
+				
+
+				
+				
+				
+			{%endif%}
+			
+			
+			
+				<br>
+				
+				<div id="note">*All correlations between votes and data are automatically determined by the system</div>
+				<!-- {%if vote.amendment and vote.amendment.subtopics.count > 0 or vote.bill and vote.bill.subtopics.count > 0%}
+								<div id="note">* All topics and subtopics are taken from the <a href="http://www.policyagendas.org/page/topic-codebook">Jones & Baumgarter codebook</a>
+								and are automatically assigned to the included bill or amendment</i></div>
+								{%endif%} -->
+
+
+
+
+
+				
+				{%if voters|length > 0%}
+				<div id="note">* The system determines which senators voted against party by observing the party of the bill or amendment's sponsor and then determining which members of the same party voted against the legislation and which members of the opposite party voted for the legislation. With party percentage data is from <a href="http://projects.washingtonpost.com/congress/112/">The Washington Post.</a></i></div>
+				{%endif%}
+			
+				
+				
+				
+				
+				{%if repContr|length > 0%}
+				<div id="note">* Campaign contribution data is from <a href="http://opensecrets.org">opensecrets.org.</a></i></div>	
+				{%endif%}
+				
+				{%if naicsInd|length > 0%}
+				<div id="note">* State employment data is from <a href="http://lehd.did.census.gov/cgi-bin/broker?_SERVICE=industry_focus&_PROGRAM=pgm.top_report.sas&_report=no&_question=1+&_state=+&_entity=state&_Ind2=off&_Ind3=off&_output=1&_output=2&_top=10&_question=1&_table=no&_rankings=1&_sex=0&_agegroup=A00&_geog=">The U.S. Census Bureau.</a></i></div>	
+				{%endif%}
+				
+				{%if relComm|length > 0%}
+				<div id="note">* Committee membership data is from <a href="http://govtrack.us">GovTrack.</a></i></div>	
+				{%endif%}
+				
+				{%if predElect|length > 0%}
+				<div id="note">* Upcoming election data is from <a href="http://cookpolitical.com">The Cook Political Report.</a></i></div>	
+				{%endif%}
+				
+				{%if pviReportDem|length > 0 or pviReportRep|length > 0 %}
+				<div id="note">* Upcoming election data is from <a href="http://cookpolitical.com">The Cook Political Report.</a></i></div>
+						
+				<div id="note">* The system determines
+									state political leanings vs. party by comparing each states <a href="http://en.wikipedia.org/wiki/Cook_Partisan_Voting_Index">Cook PVI score</a></i>
+									to all other states.
+									So for example the system determines that although Massachusetts elected a Republican senator, the state leans toward liberal policies because its Cook PVI Score is D+12.  </i>
+				</div>
+				{%endif%}
+		</div>
+	
+	</div>
+	
+	</div>
+	
+	
+	</div>	
+		
+	<div style="clear:both;"></div>	
+			
+	</body>
+	
+	
+	
+	
+	
+
+</html>

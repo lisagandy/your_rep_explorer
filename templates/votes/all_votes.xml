@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<votes>
+		{%for vote,contr,ind,pe,cc,dl in votes%}
+			<vote 
+				number="{{vote.number}}" date="{{vote.dateVote|date:"Y/m/d"}}" 	question="{{vote.question}}"
+				result="{{vote.result}}" 
+				url="{{refURL}}/votes/xml=true&amp;session={{vote.bill.congress.number}}&amp;bill_prefix={{vote.bill.prefix}}&amp;bill_number={{vote.bill.number}}&amp;vote_number={{vote.number}}"
+				{%if contr %}
+					has-rel-contributions="true"
+				{%endif%}
+				{%if ind %}
+					has-rel-industries="true"
+				{%endif%}
+				{%if pe %}
+					has-rel-upcoming-election="true"
+				{%endif%}
+				{%if cc %}
+					has-rel-ranking-committee="true"
+				{%endif%}
+				{%if dl%}
+					has-rel-diff-state-senator-leanings="true"
+				{%endif%}
+			/>
+		{%endfor%}
+
+</votes>

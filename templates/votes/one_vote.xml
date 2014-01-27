@@ -1,0 +1,149 @@
+<xml version="1.0">
+	<vote>
+		<vote-info
+		number="{{vote.number}}"
+		date="{{vote.dateVote|date:"Y/m/d"}}"
+		type="{{vote.voteType.voteType}}"
+		question="{{vote.question}}"
+		result="{{vote.result}}"
+		num-dems-aye="{{vote.numDemsAye}}"
+		num-dems-nay="{{vote.numDemsNay}}"
+		num-dems-present="{{vote.numDemsPresent}}"
+		num-dems-no-vote="{{vote.numDemsNV}}"
+		num-reps-aye="{{vote.numRepsAye}}"
+		num-reps-nay="{{vote.numRepsNay}}"
+		num-reps-no-vote="{{vote.numRepsNV}}"
+		num-reps-present="{{vote.numRepsPresent}}"
+		num-other-aye="{{vote.numOtherAye}}"
+		num-other-nay="{{vote.numOtherNay}}"
+		num-other-no-vote="{{vote.numOtherNV}}"
+		num-other-present="{{vote.numOtherPresent}}"
+		/>
+		
+		<bill-info
+		congress="{{vote.bill.congress.number}}"
+		prefix="{{vote.bill.prefix}}"
+		number="{{vote.bill.number}}"
+		title="{{vote.bill.title}}"
+			sponsor="{{vote.bill.sponsor.lastName}}, {{vote.bill.sponsor.firstName}}"
+			sponsor-gov-track-id="{{vote.bill.sponsor.repGovTrackID}}"
+			sponsor-party="{{vote.bill.sponsor.officialPartyTitle}}"
+			{%if bill.summary%}
+				summary="{{vote.bill.summary}}"
+			{%endif%}
+		/>
+		
+		
+		{% if vote.amendment%}
+		<amendment-info
+		number="{{vote.amendment.number}}"
+		description="{{vote.amendment.description}}"
+		
+		sponsor="{{vote.amendment.sponsor.lastName}}, {{vote.amendment.sponsor.firstName}}"
+		
+		sponsor-gov-track-id="{{vote.amendment.sponsor.repGovTrackID}}"
+		sponsor-party="{{vote.amendment.sponsor.officialPartyTitle}}"
+		/>
+		{%endif%}
+		
+		<!-- {%for topic,subtopics in vote.groupedByTopic.items%}
+					<topic name="{{topic.name}}">
+						{%for st in subtopics%}
+							<subtopic name="{{st.name}}"/>
+						
+						
+						{%endfor%}
+					</topic>
+				{%endfor%} -->
+		
+		
+	</vote>
+		
+	<anom-voters>
+		{% for av,bipInfo,bipTF,predElection,relComm,naicsInd,lsRepContr,pviReport in voters%}
+			<voter>
+				<voter-info lastname="{{av.rep.lastName}}" firstname="{{av.rep.firstName}}" 
+					osid="{{av.rep.repID}}" gov-track-id="{{av.rep.repGovTrackID}}" chamber="Senate" 
+			
+					state="{{av.rep.state}}"
+					party="{{av.rep.officialPartyTitle}}"
+					vote-cast="{{av.voteCast}}"
+				/>
+				{%if bipInfo%}
+					<bi-partisan-stats
+				 	votes-against-party-freq="{{bipTF}}"
+					party-percent-score="{{bipInfo.withPartyScore}}.0"	
+					rank = "{{bipInfo.rank}}/100"	
+					source = "http://projects.washingtonpost.com/congress/{{av.rep.congress.number}}/senate/members/"
+									/>	
+				{%endif%}
+			
+				
+				{%if predElection%}
+					<rel-next-election
+						prediction="{{predElection.predElection.longPred}}"
+						election-date="{{predElection.predElection.election.date|date:"Y/m/d"}}"
+						senate-class="{{predElection.predElection.election.senateClass}}"
+						source="http://www.cookpolitical.com"
+						source-date="{{predElection.predElection.date|date:"Y/m/d"}}"
+					/>		
+				{%endif%}
+				
+				{%if relComm%}
+					<rel-committee
+						name="{{relComm.committee.name}}"
+						code="{{relComm.committee.code}}"
+						{%if relComm.isChair%}
+							chair="true"
+						{%endif%}
+						{%if relComm.isViceChair%}
+							vice-chair="true"
+						{%endif%}
+						{%if relComm.isRankingMember%}
+							ranking-member="true"
+						{%endif%}
+					/>		
+				{%endif%}
+				
+				{%if naicsInd%}
+					<rel-industry
+						name="{{naicsInd.naicsLocale.naicsIndustry.name}}"
+						naics-code="{{naicsInd.naicsLocale.naicsIndustry.code}}"
+						state="{{av.rep.state}}"
+						percent-pop-emps="{{naicsInd.percentage|floatformat:2}}"
+						percent-pop-emps-rank-all-states="{{naicsInd.rank}}/50"
+						source="http://lehd.did.census.gov/led/"
+					/>
+				{%endif%}
+				{%if lsRepContr%}
+					{%for rc in lsRepContr%}
+						<rel-contribution
+							business-type="{{rc.mlBusiness.name}}"
+							business-code="{{rc.mlBusiness.mlID}}"
+							total-amt="{{rc.totalAmtStr}}"
+							total-amt-rank-senators="{{rc.rank}}/100"
+							total-amt-start-date="{{rc.startDate|date:"Y/m/d"}}"
+							total-amt-end-date="{{rc.endDate|date:"Y/m/d"}}"
+							source="http://opensecrets.org"
+							/>
+					{%endfor%}		
+				{%endif%}
+				
+				{%if pviReport%}
+					<rel-diff-state-senator-leanings
+						senator-state="{{pviReport.rep.state}}"
+						state-pvi-score="{{pviReport.properStrScore}}"
+						{% ifequal av.rep.party "D" %}
+							avg-dem-state-pvi-score="{{pviReport.properStrAvg}}"
+						{%endifequal%}
+						/>
+				{%endif%}
+				
+				
+				
+			</voter>
+			
+			
+		{%endfor%}
+	</anom-voters>
+</xml>

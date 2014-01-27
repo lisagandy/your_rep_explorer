@@ -1,0 +1,517 @@
+<html>
+	<head>
+		
+		<!-- CSS -->
+		<link rel="stylesheet" href="{{refURL}}/static/css/style_vote.css" />
+		<link rel="stylesheet" href="{{refURL}}/static/css/blue/style.css" />
+
+		<!-- JS -->
+		
+		<script type="text/javascript" src="{{refURL}}/static/js/jquery.js"></script>
+		<script type="text/javascript" src="{{refURL}}/static/js/browser_detect.js"></script>
+        <script type="text/javascript" src="{{refURL}}/static/js/jquery.tablesorter.js"></script>
+ 	
+		
+		
+       	<script type="text/javascript">
+       		    $(document).ready(function(){
+     	       		  $(".accordion .hide_text").hide();
+     	       		  $(".accordion .show_text").click(function(){
+     	       		  $(this).next(".hide_text").slideToggle("slow")
+     	       		  $(this).toggleClass("active");});
+     	       		  $("table").tablesorter(); 
+     	       	});	
+	
+    							
+       	</script>
+	<br>	
+	</head>	
+	<body>
+		<div class="accordion">
+		<div id="container">
+			<div id="header">
+				<div id="logo"><img src="{{refURL}}/static/images/logo.png" alt="Congressional Close-Up"/></div>
+			</div>
+			<div id="content_outer">
+
+				<div class="floatClear"></div>
+
+				<div id="content_inner2">
+		
+		
+		
+			{%if not vote.amendment%}
+			<h2>Bill Information</h2>
+				<hr>
+				<b>Bill number: </b>{{vote.bill.prefix.upper}}.{{vote.bill.number}}<br>
+				<b>Bill title:</b> {{vote.bill.title}}<br>
+				<b>Bill sponsor:</b> {{vote.bill.sponsor.officialName}}<br>
+				<b>Bill summary:</b><br>
+				{%for descript  in vote.bill.twoPartSummary%}
+					{%if forloop.first%}
+						{{descript}}
+					
+					{%else%}
+						{%if descript%}
+							<div class="show_text"><a><span class="hide_link">Read entire summary...</span></a></div>
+							<div class="hide_text">{{descript}}</div>
+						
+						{%endif%}
+					{%endif%}
+						
+				{%endfor%}
+				
+				{%if vote.bill.subtopics.count > 0%}
+					<br><b>Bill topics and subtopics: </b><br>
+					{%for topic,subtopics in vote.bill.groupedByTopic.items%}
+								<div id="topic">Topic: {{topic.name}}</div>
+								{%for sub in subtopics%}
+									<div id="subtopic">Subtopic:{{sub.name}}</div>
+								{%endfor%}
+
+					{%endfor%}
+				{%endif%}
+				
+				<br>	
+			{%else%}
+			
+				<h2>Amendment Information</h2>
+				<hr>
+				
+				<b>Amendment number: </b>{{vote.amendment.number}}<br>
+				<b>Amendment sponsor: </b>{{vote.amendment.sponsor.officialName}}<br>
+				<b>Amendment description: </b>{{vote.amendment.cleanedDescript}}<br>
+				<br>
+				{%if vote.amendment.subtopics.count > 0%}
+					<b>Amendment topics and subtopics: *</b><br>
+						
+					{%for topic,subtopics in vote.amendment.groupedByTopic.items%}
+								<div id="topic">Topic: {{topic.name}}</div>
+								{%for sub in subtopics%}
+									<div id="subtopic">Subtopic:{{sub.name}}</div>
+								{%endfor%}
+
+					{%endfor%}
+				
+
+
+				{%endif%}
+			{%endif%}	
+		
+				<h2>Vote Information</h2>
+					<hr>
+					<b>Congress number:</b>{{vote.bill.congress.number}}<br>
+					<b>Vote number:</b> {{vote.number}}<br>
+					<b>Vote date:</b> {{vote.dateVote|date:"M d, Y"}}<br>
+					<b>Vote type:</b> {{vote.voteType.voteType}}<br>
+					<b>Vote question:</b> {{vote.question}}<br>
+				<b>	Vote result:</b> {{vote.result}}<br>
+					<br>
+					<b>Voting statistics:</b>
+					<br>
+					<table class="tablesorter" width="375px">
+					<thead>
+					<tr>
+					<th>Vote/Party</th><th>Democrats</th><th>Republicans</th><th>Other</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+					<td>Aye</td><td>{{vote.numDemsAye}}</td><td>{{vote.numRepsAye}}</td><td>{{vote.numOtherAye}}</td>
+					</tr>
+					<tr>
+					<td>Nay</td><td>{{vote.numDemsNay}}</td><td>{{vote.numRepsNay}}</td><td>{{vote.numOtherNay}}</td>
+					</tr>
+					<tr>
+					<td>Present</td><td>{{vote.numDemsPresent}}</td><td>{{vote.numRepsPresent}}</td><td>{{vote.numOtherPresent}}</td>
+					</tr>
+					<tr>
+					<td>No Vote</td><td>{{vote.numDemsNV}}</td><td>{{vote.numRepsNV}}</td><td>{{vote.numOtherNV}}</td>
+					</tr>
+					</tbody>
+					</table>
+			
+			
+		
+			{%if voters%}
+				<h2>Senators Who Voted Against Party</h2>
+				<hr>
+				<i>It is very common in today's political climate for Senators to vote with their party.  Therefore, when a Senator
+					votes against their party, Congressional Close Up examines what outside influences might have
+					influenced their vote.<br><br></i>
+				
+				
+				
+				<table class="tablesorter" width="400px">
+					<thead>
+					<tr>
+					<th>Senator</th>
+					<th>Votes Against <br>Party Frequently</th>
+					<th>With Party <br>Voting Percentage</th>
+					
+					</tr>
+					</thead>
+					<tbody>
+				{%for av,bipart in voters%}
+					
+					<tr>
+	
+					<td>{{av.rep.officialName}}</td>
+					
+					
+					{%for yesNo, data in bipart%}
+						{%if yesNo and data.withPartyScore != -1%}
+							<td>YES</td>
+						{%else%}
+							{%if data.withPartyScore == -1%}
+								<td>UNKNOWN</td>
+							{%else%}
+								<td>NO</td>
+							{%endif%}
+						{%endif%}
+						
+						{%if data.withPartyScore == -1%}
+							<td>UNKNOWN</td>
+						{%else%}
+							<td>{{data.withPartyScore}}.0%</td>
+						{%endif%}
+					{%endfor%}
+					
+				
+					</tr>
+				{%endfor%}
+				</tbody>
+				</table>
+			{%endif%}
+			
+			{%if repContr|length > 0%}
+				<h2>Relevant Campaign Contributions</h2>
+				<hr>
+				<i>Campaign Contributions from interest groups that are affected by this legislation might have influenced votes</i>
+				<br><br>	
+				<table class="tablesorter" width="700px">
+				<thead>
+				<tr>
+					<th>Senator</th>
+					<th>Interest Group</th>
+					<th>Amount<br> Money</th>
+					<th>Percentage of All<br>Campaign Contrs.</th>
+					<!-- <th>Rank Money <br> Senator/<br>All Senators</th>
+										<th>Campaign <br>Contribution <br>Start/End Date</th> -->
+				</thead>
+				<tbody>
+				</tr>
+				{%for rep,sector,total,numBus,percent in repContr %}
+					<tr>
+					<td>{{rep.officialName}}</td>
+					<td>{{sector.officialName}}<br>{{numBus}} businesses</td>
+					<td>{{total}}</td>
+					<td>{{percent|floatformat:2}}%</td>
+					<!-- <td>{{rc.startDate|date:"m/d/Y"}}-<br>{{rc.endDate|date:"m/d/Y"}} -->
+					</tr>
+				
+				{%endfor%}
+				</tbody>
+				</table>
+				
+			{%endif%}
+			
+			{%if repOrgs|length > 0%}
+				<h2>Influenced by Company Stances</h2>
+				<hr>
+				<i>A stance on the related bill combined with campaign contributions might have affected votes</i>
+				<br><br>	
+				<table class="tablesorter" width="700px">
+				<thead>
+				<tr>
+					<th>Senator</th>
+					<th>Companies</th>
+					<th>Company Sector</th>
+					<th>Senator/Company Same Stances</th>
+					<th>Total Amt. of Money <br>from Companies</th>
+				</thead>
+				<tbody>
+				</tr>
+				{%for amtInt,rep,orgstances,compStance,sameStance,totalAmt,sectorName in repOrgs %}
+					<tr>
+					<td>{{rep.officialName}}</td>
+					
+					<td>
+						<!-- <div class="show_text"><a><span class="hide_link">Read entire summary...</span></a></div>
+												<div class="hide_text">{{descript}}</div> -->
+						
+						{%for orgst in orgstances%}
+							
+							{%if forloop.counter == 3 %}
+								<div class="show_text"><a><span class="hide_link">More companies...</span></a></div>
+								<div class="hide_text">
+							{%endif%}
+							
+							
+							{{orgst.org.orgName}}<br>
+						
+							{%if orgstances|length > 2 and forloop.last%}
+								</div>
+							{%endif%}
+							
+							
+						{%endfor%}
+					</td>
+					
+					<td>
+						{{sectorName.officialName}}
+					</td>
+					
+					<td>
+						{%if sameStance%}
+							Same Stance
+								{%if compStance%}
+									<br>(Both Companies and Senator For Bill)
+								{%else%}
+									<br>(Both Companies and Senator Against Bill)
+								{%endif%}
+							
+						{%else%}
+							Different Stance
+								{%if compStance%}
+									<br>(Companies For, Senator Against Bill)
+								{%else%}
+									<br>(Companies Against,Senator For Bill)
+								{%endif%}	
+						{%endif%}
+					</td>
+					
+					<td>{{totalAmt}}</td>
+					
+					</tr>
+				
+				{%endfor%}
+				</tbody>
+				</table>
+				
+			{%endif%}
+			
+			
+			
+			
+			{%if naicsInd|length > 0%}
+			<h2>Relevant Local Industries</h2>
+			<hr>
+			<i>Local industries that are affected by the proposed legislation
+				might have influenced votes.<br><br></i>
+			<table class="tablesorter">
+				<thead>
+				<tr>
+					<th>Senator</th>
+					<th>Industry</th>
+					<th>State</th>
+					<th>Percent of <br>State Employed</th>
+					<th>Rank # Employees<br> This State/All States</th>
+					<th>Census report <br>Begin/End Date</th>
+				</tr>
+			 <tbody>
+			 {%for indObj in naicsInd%}
+				<tr>
+					<td>{{indObj.rep.officialName}}</td>
+					<td>{{indObj.naicsLocale.naicsIndustry.name}}</td>
+					<td>{{indObj.rep.state}}</td>
+					<td>{{indObj.percentage|floatformat:2}}%</td>
+					<td>{{indObj.rank}}/50</td>
+					<td>Q{{indObj.naicsLocale.beginQuarter}}/{{indObj.naicsLocale.beginYear}}-
+						Q{{indObj.naicsLocale.endQuarter}}/{{indObj.naicsLocale.endYear}}
+						</td>
+				</tr>
+					
+			 {%endfor%}
+			 </tbody>
+			 </table>
+			{%endif%}
+			
+			
+			{%if relComm|length > 0%}
+						<h2>Relevant Committee Memberships</h2>
+						<hr>
+						<i>Membership in committees that are related to this legislation might have influenced votes </i>
+						<br><br>
+						<table class="tablesorter" width="500px">
+						<thead>
+						<tr>
+							<th>Senator</th>
+							<th>Committee</th>
+							<th>Membership Type</th>
+						</tr>
+						</thead>
+						<tbody>
+						{%for obj in relComm%}
+							<tr>
+								<td>{{obj.rep.officialName}}</td>
+								<td>{{obj.committee.name}}</td>
+
+									{%if obj.isChair%}
+										<td>Chairman</td>
+									{%endif%}
+									{%if obj.isViceChair%}
+										<td>Vice-Chairman</td>
+									{%endif%}
+									{%if obj.isRankingMember%}
+										<td>Ranking Member</td>
+									{%endif%}
+							</tr>
+						{%endfor%}
+					</tbody>
+					</table>
+			{%endif%}
+			
+			
+			{%if predElect|length > 0%}
+				<h2>Upcoming Elections</h2>
+				<hr>
+				<i>An upcoming election might have influenced this vote</i>
+				<table class="tablesorter">
+				<thead>
+				<tr class="bold">
+					<th>Senator</th>
+					<th>Election Prediction</th>
+					<th>Election Date</th>
+				</tr>
+				</thead>
+				<tbody>
+				{%for elect in predElect%}
+					<tr>
+						<td>{{elect.predElection.rep.officialName}}</td>
+						<td>{{elect.predElection.longPred}}</td>
+						<td>{{elect.predElection.election.date|date:"m/d/Y"}}</td>
+					</tr>
+				
+				{%endfor%}
+				</tbody>
+				</table>
+			{%endif%}
+			
+			{%if pviReportRep|length > 0 or pviReportDem|length > 0 %}
+				<h2>State Political Leanings vs. Party</h2>
+				<hr>
+				<i>At times a state might vote for a Republican but have some leanings toward liberal policies or
+					the state might vote for a Democrat and have some conservative tendencies.  This situation might
+					cause a Senator to vote with the other party on occasion. For further explanation of this category please see the
+					bottom of the page.</i>  
+					<br><br>
+				{%if pviReportRep|length > 0%}
+					<table width="425px" class="tablesorter">
+					<thead>
+					<tr class="bold">
+						<th width="160px">Republican <br>Senator</th>
+						<th width="100px">State</th>
+						<th>State PVI Score<br>/Avg. GOP PVI Score</th>
+					</tr>
+					</thead>
+					<tbody>
+					{%for pviReport in pviReportRep%}
+						<tr>
+							<td>{{pviReport.rep.officialName}}</td>
+							<td>{{pviReport.rep.state}}</td>
+							<td>
+								{{pviReport.properStrScore}}
+								<div id="pviTable">/{{pviReport.properStrAvg}}</div></td>
+						</tr>
+					{%endfor%}
+					</tbody>
+					</table>
+				{%endif%}
+				
+				{%if pviReportDem|length > 0%}
+					{%if pviReportRep|length > 0%}
+						<br>
+					{%endif%}
+					
+					<table width="425px" class="tablesorter">
+					<thead>
+					<tr class="bold">
+						<th width="160px">Democrat <br>Senator</th>
+						<th width="100px">State</th>
+						<th>State PVI Score<br>/Avg. Democrat PVI Score</th>
+					</tr>
+					</thead>
+					<tbody>
+					{%for pviReport in pviReportDem%}
+						<tr>
+							<td>{{pviReport.rep.officialName}}</td>
+							<td>{{pviReport.rep.state}}</td>
+							<td>
+								{{pviReport.properStrScore}}
+								<div id="pviTable">/{{pviReport.properStrAvg}}</div></td>
+						</tr>
+					{%endfor%}
+					</tbody>	
+					</table>
+				{%endif%}
+				
+				
+			{%endif%}
+			
+			
+			
+				<br>
+				
+				<div id="note">*All correlations between votes and data are automatically determined by the system</div>
+				<!-- {%if vote.amendment and vote.amendment.subtopics.count > 0 or vote.bill and vote.bill.subtopics.count > 0%}
+								<div id="note">* All topics and subtopics are taken from the <a href="http://www.policyagendas.org/page/topic-codebook">Jones & Baumgarter codebook</a>
+								and are automatically assigned to the included bill or amendment</i></div>
+								{%endif%} -->
+
+
+
+
+
+				
+				{%if voters|length > 0%}
+				<div id="note">* The system determines which senators voted against party by observing the party of the bill or amendment's sponsor and then determining which members of the same party voted against the legislation and which members of the opposite party voted for the legislation. With party percentage data is from <a href="http://projects.washingtonpost.com/congress/112/">The Washington Post.</a></i></div>
+				{%endif%}
+			
+				
+				
+				
+				
+				{%if repContr|length > 0%}
+				<div id="note">* Campaign contribution data is from <a href="http://opensecrets.org">opensecrets.org.</a></i></div>	
+				{%endif%}
+				
+				{%if naicsInd|length > 0%}
+				<div id="note">* State employment data is from <a href="http://lehd.did.census.gov/cgi-bin/broker?_SERVICE=industry_focus&_PROGRAM=pgm.top_report.sas&_report=no&_question=1+&_state=+&_entity=state&_Ind2=off&_Ind3=off&_output=1&_output=2&_top=10&_question=1&_table=no&_rankings=1&_sex=0&_agegroup=A00&_geog=">The U.S. Census Bureau.</a></i></div>	
+				{%endif%}
+				
+				{%if relComm|length > 0%}
+				<div id="note">* Committee membership data is from <a href="http://govtrack.us">GovTrack.</a></i></div>	
+				{%endif%}
+				
+				<!-- {%if predElect|length > 0%} -->
+				<div id="note">* Upcoming election data is from <a href="http://cookpolitical.com">The Cook Political Report.</a></i></div>	
+				<!-- {%endif%} -->
+				
+				{%if pviReportDem|length > 0 or pviReportRep|length > 0 %}
+						
+				<div id="note">* The system determines
+									state political leanings vs. party by comparing each states <a href="http://en.wikipedia.org/wiki/Cook_Partisan_Voting_Index">Cook PVI score</a></i>
+									to all other states.
+									So for example the system determines that although Massachusetts elected a Republican senator, the state leans toward liberal policies because its Cook PVI Score is D+12.  </i>
+				</div>
+				{%endif%}
+		</div>
+	
+	</div>
+	
+	</div>
+	
+	
+	</div>	
+		
+	<div style="clear:both;"></div>	
+			
+	</body>
+	
+	
+	
+	
+	
+
+</html>

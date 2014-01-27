@@ -1,0 +1,704 @@
+@charset "UTF-8";
+/* CSS Document for ... */
+/* Prepared by Heather Smith */
+/*
+*
+    { 
+        margin: 0; 
+        padding: 0; 
+    }*/
+	
+/*img   
+    {
+        border: 0px;
+    }
+*/
+body 
+	{ 
+	    font-size: 12px; 
+	    font-family:"Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
+	    color: #303030;
+	   	background-image: url(../images/bkgd.jpg);
+		background-color: #022e5d;
+		background-repeat: repeat-x;
+	}	
+
+
+#pviTable{
+    position:absolute;
+    margin-left:31px;
+    margin-top:-18px;
+}
+
+/**************GRAPHS***************************/
+.chart{
+    float:left;
+}
+
+
+#pup {
+  position:absolute;
+  z-index:200; 
+  padding: 3px;
+    margin-left: 10px;
+    margin-top: 5px;
+    width: 500px;
+    border: 1px solid black;
+
+}
+
+.thumbnail{
+position: relative;
+z-index: 0;
+}
+
+.thumbnail:hover{
+background-color: transparent;
+z-index: 50;
+}
+
+.thumbnail span{ 
+position: absolute;
+background-color: white;
+padding-right: 30px;
+padding-bottom:5px;
+padding-top:5px;
+left: -1000px;
+border: 1px solid black;
+visibility: hidden;
+color: black;
+text-decoration: none;
+}
+
+.thumbnail span img{ /*CSS for enlarged image*/
+border-width: 0;
+padding-right: 5px;
+padding-bottom:2px;
+padding-top:2px;
+}
+
+.fake_link{
+    color:blue;
+    text-decoration:underline;
+}
+
+.thumbnail:hover span{ /*CSS for enlarged image on hover*/
+visibility: visible;
+top: 0;
+left: 60px; /*position where enlarged image should offset horizontally */
+}
+
+#blanket {
+background-color:#111;
+opacity: 0.65;
+filter:alpha(opacity=65);
+position:absolute;
+z-index: 9001;
+top:0px;
+left:0px;
+width:100%;
+}
+.popUpDiv {
+border:1px solid black;    
+position:absolute;
+background-color:white;
+width:550px;
+height:225px;
+z-index: 9002;
+}
+
+.popUpDivInd {
+border:1px solid black;    
+position:absolute;
+background-color:white;
+width:375px;
+height:250px;
+z-index: 9002;
+padding-left:25;
+}
+
+/***********************************************/
+
+
+
+/*____________________________LINE UP CHOICE SELECT BOXES_____________________*/
+#img_div{
+    width:150px;
+/*    height:200px;*/
+    float:left;
+}
+
+#info_div{
+    float:left;
+    width:115px;
+}
+
+#info_div2{
+    float:left;
+}
+
+#hide_div1{
+
+    display:none;
+}
+
+#hide_div2{
+
+    display:none;
+}
+
+#mini_descript{
+    margin-top:1px;
+    float:left;
+    position:absolute;
+    font-weight:bold;
+}
+
+#descript{
+    margin-top:1px;
+    position:absolute;
+    float:left;
+    margin-left:125px;
+}
+
+#div3{
+/*   float:left;*/
+    margin-top:1px;
+    margin-left:400px;
+}
+
+#div4{
+    margin-left:125px;
+    margin-top:-125px;
+    position:absolute;
+}
+/*______________________________ADDED FOR LINE GRAPH___________________________*/
+
+
+#tooltip { font-size:8pt;
+	font-family: Arial, sans-serif; }
+
+.graph-container{
+	width:475px;
+	height:230px;
+	border:1px solid #ccc;
+	padding: 10px;
+	margin: 10px;
+	font-family: Arial, sans-serif;
+}
+
+.y-label{
+
+	margin-top:100px;
+	width:200px;
+	margin-left:-75px;
+	-webkit-transform: rotate(-90deg); 
+	-moz-transform: rotate(-90deg);
+	float:left;
+	text-align:center;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.graph-container2{
+	  width:300px;
+	  height:200px;
+	  margin-left:-75px;
+	  margin-top:30px;
+	  float:left;	
+}
+
+.graph {     
+		width:300px;
+		height:150px;
+		}
+			
+.x-label {     
+	width:100%;
+	height:30px;
+	text-align:center;
+	margin-top: 10px;
+	font-size: 12px;
+	font-weight: bold;
+	 }
+
+.legend {     
+		width:120px;
+		margin-top: 35px;
+		float: right;
+		}
+
+/*______________________________MISC ADDED BY LIST_____________________________*/
+#smaller{
+    padding:20px 20px 20px 20px;
+}
+
+#red{
+    color:red;
+}
+
+#senatorSelect{
+    padding:0px 0px 0px 3px;
+}
+/* _____________________________ STRUCTURAL LAYOUT _____________________________ */
+
+
+
+#container
+	{
+	width: 884px;
+	margin-right:auto;
+	margin-left:auto;
+	padding:0px;
+	text-align:left;
+	}
+
+
+#logo
+    {
+	float: left;
+    }
+    
+#header
+	{
+	margin: 30px 20px;
+	height: 115px;
+	}
+	
+.read_story
+	{
+	margin-top: 10px;
+	}
+    
+#right_nav
+	{
+	background-image: url(../images/right_nav.jpg);
+	background-repeat: no-repeat;
+	height: 154px;
+	width: 12px;
+	float: right;
+	}
+	
+#sources_outer
+	{
+	float: left;
+	width: 140px;
+	background-color: #99a8b5;
+	padding: 5px;
+	margin-top: 10px;
+	margin-right:20px;
+	margin-left:20px;
+	}
+	
+#sources_inner
+	{
+	float: left;
+	width: 100px;
+	background-color: #99a8b5;
+	padding: 20px;
+	border: 1px solid #818e99;
+	}	
+	
+#content_outer
+	{
+	background-color: #FFF;
+	padding: 5px;
+	width: 850px;
+	float: right;
+	margin-right: 20px 13px;
+	}
+	
+#content_inner1
+	{
+    padding:5px;
+	margin-top:10px;
+	margin-left:250px;
+	/*height:250px;*/
+	border: 1px solid #cdcdcc;
+	}
+	
+#content_inner2
+	{
+    padding:5px;
+	margin:20px;
+	/*height:300px;*/
+	border: 2px solid #cdcdcc;
+	}	
+	
+#content_inner_rep_bio
+    	{
+        padding:5px;
+    	margin:20px;
+        height:175px;
+    	border: 2px solid #cdcdcc;
+    	}
+
+#content_inner_rep_bio2
+	{
+    padding:5px;
+	margin:20px;
+/*    height:175px;*/
+	border: 2px solid #cdcdcc;
+	}
+
+#alert_div
+    {
+    padding:5px;
+	margin-top:10px;
+	margin-left:20px;
+	/*height:300px;*/
+	border: 1px solid red;
+	}
+
+
+
+
+table tr td 
+	{
+	font-size: 11px;
+	border: 1px solid #aaa;
+	padding: 5px;
+	}
+
+th{
+    font-size: 11px;
+	border: 1px solid #aaa;
+	padding: 5px;
+}
+
+.odd{
+    background:#EFF2FF;
+}	
+.table_accent
+	{
+	margin-top: 10px;
+	text-align: center;
+	margin-bottom: 20px;
+	font-style: italic;
+	color: #396088;
+	}
+
+.table_left_little
+{margin-left:20px;}
+
+	
+#footer
+	{
+	color: #95b1cd;
+	font-size: 10px;
+	margin: 20px 15px 20px 0px;
+	float: right;
+	}
+
+/* _____________________________ LINKS _____________________________*/
+
+a:link
+	{
+	color: #0000FF;
+	}
+	
+/*a:visited
+	{
+	color: #9900FF;
+	}	*/
+	
+a:hover, a:active
+	{
+	color: #0000FF;
+	}	
+	
+a.hover:hover
+	{
+	position: relative;
+	top: 1px;
+	}
+	
+span.hide_link
+	{color: #283A90; text-decoration: underline;}
+
+span.hide_link:hover
+	{color: #0000FF; cursor: pointer;}	
+
+	
+/* _____________________________ LISTS _____________________________*/
+
+#note{
+    font-size:10px;
+}    
+
+
+
+#topic{
+    margin-left:5px;
+    margin-bottom:0px;
+}
+
+#subtopic{
+    margin-left:25px;
+}
+
+
+/*li{
+    margin-left:15px;
+    
+}*/
+
+
+ul#global_nav
+    {
+    float: left;
+    list-style-type: none;
+
+    }
+
+ul#global_nav li
+    {
+    float: left;
+    background-image: url(../images/light_nav_bkgd.jpg);
+    background-repeat: no-repeat;
+    height:80px;
+    width:144px;
+    padding: 40px 20px 0px;
+    text-align: center;
+    }
+    
+ul#global_nav li#active
+    {
+    float: left;
+    background-image: url(../images/dark_nav_bkgd.jpg);
+    background-repeat: no-repeat;
+    }   
+    
+ul#global_nav li a:link, ul#global_nav li a:visited
+    {
+    color: #FFF;
+    font-size: 13px;
+    text-shadow:2px 2px 0 rgba(71, 69, 74, 0.7);
+    
+    }       
+    
+ul#global_nav li a:hover, ul#global_nav li a:active
+    {
+    color: #bfdcff;
+    
+    }
+    
+
+
+/* _____________________________ TYPOGRAPHY _____________________________ */
+
+#chart_title{
+    margin-left:75px;
+    margin-bottom:0px;
+}
+
+#h1fake{
+    font-size:20px;
+    font-family:Georgia,"Times New Roman",Times,serif;
+}
+
+
+
+h1, /*h2, h3, h4, h5, h6, blockquote*/ 
+    {
+        margin-bottom:100px;
+        font-family:Georgia,"Times New Roman",Times,serif;
+    }
+
+h1, h2, h3, h4, h5, h6, blockquote 
+    {
+        font-family:Georgia,"Times New Roman",Times,serif;
+    }
+
+h2
+    {
+        font-size: 18px;
+    }
+
+
+p 
+    {
+        /*margin-top:-10px;*/
+        margin-bottom:10px;
+    }
+
+.bold
+    {
+        font-weight: bold;
+    }
+
+.italic
+    {
+        font-style: oblique;
+    }
+    
+.shadow
+    {
+        text-shadow:2px 2px 0 rgba(71, 69, 74, 0.7);
+    }
+
+
+/* _____________________________ GENERAL _____________________________ */
+
+.floatLeft
+	{
+	    float:left;
+	    display: inline;
+	}
+
+.floatRight
+	{
+	    float:right;
+	    display: inline;
+	}
+
+.floatClear
+	{
+	    clear: both;
+	}
+
+.paddingLarge
+	{
+	    padding: 15px;
+	}
+
+.paddingSmall
+	{
+	    padding: 8px;
+	}	
+
+.imageLeft
+	{
+	    margin: 0px 10px 5px 0px;
+	}
+
+/* ------------------------- STUFF FOR PROGRESS BARS ----------------------- */
+.meter { 
+    width:500px;
+	height: 20px;  /* Can be anything */
+	position: relative;
+	/*margin: 60px 0 20px 0; /* Just for demo spacing */
+	background: #CCCCCC;
+	/*make rounded edges*/
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 10px;
+	border-radius: 25px;
+	
+	padding: 5px;
+	-webkit-box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+	-moz-box-shadow   : inset 0 -1px 1px rgba(255,255,255,0.3);
+	box-shadow        : inset 0 -1px 1px rgba(255,255,255,0.3);
+}
+.meter > span {
+	display: block;
+	height: 100%;
+	   -webkit-border-top-right-radius: 8px;
+	-webkit-border-bottom-right-radius: 8px;
+	       -moz-border-radius-topright: 8px;
+	    -moz-border-radius-bottomright: 8px;
+	           border-top-right-radius: 8px;
+	        border-bottom-right-radius: 8px;
+	    -webkit-border-top-left-radius: 20px;
+	 -webkit-border-bottom-left-radius: 20px;
+	        -moz-border-radius-topleft: 20px;
+	     -moz-border-radius-bottomleft: 20px;
+	            border-top-left-radius: 20px;
+	         border-bottom-left-radius: 20px;
+	background-color: rgb(43,194,83);
+	background-image: -webkit-gradient(
+	  linear,
+	  left bottom,
+	  left top,
+	  color-stop(0, rgb(43,194,83)),
+	  color-stop(1, rgb(84,240,84))
+	 );
+	background-image: -moz-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	-webkit-box-shadow: 
+	  inset 0 2px 9px  rgba(255,255,255,0.3),
+	  inset 0 -2px 6px rgba(0,0,0,0.4);
+	-moz-box-shadow: 
+	  inset 0 2px 9px  rgba(255,255,255,0.3),
+	  inset 0 -2px 6px rgba(0,0,0,0.4);
+	box-shadow: 
+	  inset 0 2px 9px  rgba(255,255,255,0.3),
+	  inset 0 -2px 6px rgba(0,0,0,0.4);
+	position: relative;
+	overflow: hidden;
+}
+.meter > span:after, .animate > span > span {
+	content: "";
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+	background-image: 
+	   -webkit-gradient(linear, 0 0, 100% 100%, 
+	      color-stop(.25, rgba(255, 255, 255, .2)), 
+	      color-stop(.25, transparent), color-stop(.5, transparent), 
+	      color-stop(.5, rgba(255, 255, 255, .2)), 
+	      color-stop(.75, rgba(255, 255, 255, .2)), 
+	      color-stop(.75, transparent), to(transparent)
+	   );
+	background-image: 
+		-moz-linear-gradient(
+		  -45deg, 
+	      rgba(255, 255, 255, .2) 25%, 
+	      transparent 25%, 
+	      transparent 50%, 
+	      rgba(255, 255, 255, .2) 50%, 
+	      rgba(255, 255, 255, .2) 75%, 
+	      transparent 75%, 
+	      transparent
+	   );
+	z-index: 1;
+	-webkit-background-size: 50px 50px;
+	-moz-background-size: 50px 50px;
+	-webkit-animation: move 2s linear infinite;
+	   -webkit-border-top-right-radius: 8px;
+	-webkit-border-bottom-right-radius: 8px;
+	       -moz-border-radius-topright: 8px;
+	    -moz-border-radius-bottomright: 8px;
+	           border-top-right-radius: 8px;
+	        border-bottom-right-radius: 8px;
+	    -webkit-border-top-left-radius: 20px;
+	 -webkit-border-bottom-left-radius: 20px;
+	        -moz-border-radius-topleft: 20px;
+	     -moz-border-radius-bottomleft: 20px;
+	            border-top-left-radius: 20px;
+	         border-bottom-left-radius: 20px;
+	overflow: hidden;
+}
+
+.animate > span:after {
+	display: none;
+}
+
+@-webkit-keyframes move {
+    0% {
+       background-position: 0 0;
+    }
+    100% {
+       background-position: 50px 50px;
+    }
+}
+
+.orange > span {
+	background-color: #f1a165;
+	background-image: -moz-linear-gradient(top, #f1a165, #f36d0a);
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #f1a165),color-stop(1, #f36d0a));
+	background-image: -webkit-linear-gradient(#f1a165, #f36d0a); 
+}
+
+.red > span {
+	background-color: #f0a3a3;
+	background-image: -moz-linear-gradient(top, #f0a3a3, #f42323);
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #f0a3a3),color-stop(1, #f42323));
+	background-image: -webkit-linear-gradient(#f0a3a3, #f42323);
+}
+
+.nostripes > span > span, .nostripes > span:after {
+	-webkit-animation: none;
+	background-image: none;
+}

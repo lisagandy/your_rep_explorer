@@ -50,7 +50,7 @@ USE_I18N = True
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 #CHANGE THIS MEDIA ROOT 
-MEDIA_ROOT = '/Users/lisa/Desktop/ccu_beta/media/static/'
+MEDIA_ROOT = '/Users/lisa/Desktop/your_rep_explorer/media/static/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -91,19 +91,21 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware'
 )
 
-ROOT_URLCONF = 'ccu_beta.urls'
+ROOT_URLCONF = 'your_rep_explorer.urls'
 
 TEMPLATE_DIRS = (
     #CCU_PATH + 'ccu_beta/templates'
-    '/Users/lisa/Desktop/ccu_beta/templates'
+    '/Users/lisa/Desktop/your_rep_explorer/templates'
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
 
 INSTALLED_APPS = (
+	'django.contrib.messages',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

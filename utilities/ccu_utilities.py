@@ -2,7 +2,7 @@ import pyUtilities as pyU
 from datetime import date
 import simplejson
 from cosineTest import *
-from ccu_beta.ccu_gen_beta.models import *
+from your_rep_explorer.ccu_gen_beta.models import *
 import numpy
 from decimal import Decimal 
 from paths import *
@@ -121,7 +121,7 @@ def describeVoteSimple(vote):
     return strRet    
     
     
-#from ccu_beta.ccu_gen_beta.models import *
+#from your_rep_explorer.ccu_gen_beta.models import *
 #print generateName(Rep.objects.get(congress__number=112,lastName='Adams'))
 #assert 0
 

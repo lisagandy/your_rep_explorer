@@ -1,5 +1,5 @@
 from BeautifulSoup import BeautifulSoup
-from ccu_gen_beta.models import *
+from your_rep_explorer.ccu_gen_beta.models import *
 from ccu_utilities import createDate3
 import pyUtilities as pyU
 from urllib import urlretrieve
@@ -96,7 +96,7 @@ def loadReps(url):
         delta = end-start
         print delta.seconds
         print delta.microseconds
-        assert 0
+        #assert 0
         
 def downloadPics(url):
     downloadPath = '/Users/lisagandy/infolab_projects/ccu_beta/media/static/images/senators/'

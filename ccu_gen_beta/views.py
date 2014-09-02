@@ -1,6 +1,6 @@
 # Create your views here.
 from django.http import HttpResponse
-from ccu_beta.ccu_gen_beta.models import *
+from your_rep_explorer.ccu_gen_beta.models import *
 from django.template import Context, loader
 from ccu_utilities import *
 from JulianTime import convertDateTimeJul

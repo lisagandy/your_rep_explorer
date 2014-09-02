@@ -1,4 +1,4 @@
-from ccu_beta.ccu_gen_beta.models import *
+from your_rep_explorer.ccu_gen_beta.models import *
 from django.contrib import admin
 
 class AnomVoters(admin.ModelAdmin):

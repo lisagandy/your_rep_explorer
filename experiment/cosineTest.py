@@ -1,7 +1,7 @@
 import math
 
-from pyStemmer import sStem
-from pyUtilities import bIsStopWord,removePunctuation,stripExtraSpaces
+from utilities.pyStemmer import sStem
+from utilities.pyUtilities import bIsStopWord,removePunctuation,stripExtraSpaces
 import re
 
 _documents = {}
@@ -22,7 +22,7 @@ def add_document_unique(title, text):
 def clear():
     global _documents, _words
     _documents, _words = {}, {}
-        
+
 def classify_document(target_text):
     ret = {}
     target_text = _clean_text(target_text)
@@ -39,7 +39,7 @@ def classify_document_unique(target_text):
         calculated_similarity = _similarity(target_text, text)
         ret[title] = calculated_similarity
     return ret
-    
+
 def _clean_text(text):
     reNum = re.compile('\d+')
     text = ' '.join([w for w in text.split() if not bIsStopWord(w)])
@@ -60,14 +60,14 @@ def _clean_text_unique(text):
             lsTextU.append(word)
     return ' '.join([word for word in lsTextU])
 
-   
+
 def _magnitude(model):
     ret = 0
     for count in model.values():
         ret += count * count
     ret = math.sqrt(ret)
     return ret
-    
+
 def _similarity(lhs, rhs):
     #print 'here'
     ret = 0.0
@@ -84,8 +84,8 @@ def _similarity(lhs, rhs):
         if word in lhs_model.keys() and word in rhs_model.keys():
             #print word
             ret += lhs_model[word] * rhs_model[word]
-    
-    
+
+
     #print lhs_model.keys()
     #     print rhs_model.keys()
     if _magnitude(lhs_model) * _magnitude(rhs_model) > 0:
@@ -106,20 +106,20 @@ def cos_similarity(lhs, rhs):
         lhs_model[word] = 1 + lhs_model.get(word, 0)
     for word in rhs_words:
         rhs_model[word] = 1 + rhs_model.get(word, 0)
-      
+
     #print lhs_model
-    #print rhs_model 
+    #print rhs_model
     lsWords = lhs_model.keys()
     lsWords.extend(rhs_model.keys())
-    _words = list(set(lsWords)) 
+    _words = list(set(lsWords))
     for word in _words:
         if word in lhs_model.keys() and word in rhs_model.keys():
             ret += lhs_model[word] * rhs_model[word]
 
     ret /= (_magnitude(lhs_model) * _magnitude(rhs_model))
     return ret
-    
-        
+
+
 if __name__ == '__main__':
     add_document('foo','This is comprehensive legislation to overhaul regulations in the financial sector. It would establish a new Consumer Financial Protection Agency to regulate products like home mortgages, car loans and credit cards, give the Treasury Department new authority to place non-bank financial firms, like insurance companies into receivership, regulate the over-the-counter derivatives market, and more.')
     print classify_document('senate committee on finance')

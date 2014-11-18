@@ -1,10 +1,10 @@
 import pyUtilities as pyU
 from datetime import date
-import simplejson
-from cosineTest import *
-from your_rep_explorer.ccu_gen_beta.models import *
+import json as simplejson
+from experiment.cosineTest import *
+from ccu_gen_beta.models import *
 import numpy
-from decimal import Decimal 
+from decimal import Decimal
 from paths import *
 
 
@@ -89,25 +89,25 @@ def describeVoteSimple(vote):
         strRet += " to end debate on "
     else:
         strRet += vote.question
-        
+
     if vote.amendment:
-        strRet += "Amendment %s to " % vote.amendment.number.upper()           
-    strRet += "Bill %s.%s: %s" % (vote.bill.prefix.upper(), vote.bill.number, billTitle)    
+        strRet += "Amendment %s to " % vote.amendment.number.upper()
+    strRet += "Bill %s.%s: %s" % (vote.bill.prefix.upper(), vote.bill.number, billTitle)
     strRet+="<br>"
-    
+
     strRunDown = "%d%% needed to pass, %d%% received" % (int(vote.percentNeeded*100),int(vote.percentGotten*100))
     if vote.percentGotten < vote.percentNeeded:
         strRet+="The vote <b>failed</b> (%s)<br>" % strRunDown
     else:
         strRet+="The vote <b>passed</b> (%s)<br>" % strRunDown
-    
+
     try:
         if vote.amendment:
             subtopic = vote.amendment.subtopics.all()[0]
             subtopicStr = subtopic.topic.name
             if subtopic.name.find('eneral') == -1:
                 subtopicStr+= ", %s" % subtopic.name
-                
+
             strRet+="The amendment focuses on <b>%s</b><br>" % (subtopicStr)
         else:
             subtopic = vote.bill.subtopics.all()[0]
@@ -117,10 +117,10 @@ def describeVoteSimple(vote):
             strRet+="The bill focuses on <b>%s</b><br>" % (subtopicStr)
     except Exception:
         pass
-        
-    return strRet    
-    
-    
+
+    return strRet
+
+
 #from your_rep_explorer.ccu_gen_beta.models import *
 #print generateName(Rep.objects.get(congress__number=112,lastName='Adams'))
 #assert 0
@@ -134,9 +134,9 @@ def describeVote(vote,typeDescript):
             billTitle = vote.bill.otherTitles.all()[0].title
         except Exception:
             pass
-    
+
     strRet = 'Congress #%d, Vote #%d on date %s\n' % (vote.bill.congress.number,vote.number,vote.dateVote)
-    if vote.amendment:  
+    if vote.amendment:
         strRet += "<b>Amendment #%s</b> sponsored by %s\n" % (vote.amendment.number.upper(), generateName(vote.amendment.sponsor))
         strRet += '<b>Amendment Purpose:</b> %s\n' % vote.amendment.purpose
         if typeDescript=="topic":
@@ -149,10 +149,10 @@ def describeVote(vote,typeDescript):
                     strRet += "%s," % (topic.name.replace(',',' '))
                 strRet=strRet[0:-1]
                 strRet+='\n'
-        
+
         strRet += '<b>Related Bill</b>: %s.%s: %s\n' % (vote.bill.prefix.upper(),vote.bill.number,billTitle)
-        
-            
+
+
     else:
         strRet += '<b>Bill %s.%s:</b> %s\n' % (vote.bill.prefix.upper(),vote.bill.number,billTitle)
         billDescript = vote.bill.twoPartSummary()[0].replace('\n','')
@@ -168,7 +168,7 @@ def describeVote(vote,typeDescript):
                     strRet += " %s," % (topic.name.replace(',',' '))
                 strRet=strRet[0:-1]
                 strRet+='\n'
-        
+
     strRet += ' <b>Vote Question:</b> %s\n' % vote.question
     strRet += ' <b>Vote Result:</b> %s\n' % vote.result
     allVoters = getAllAnomVoters(vote)
@@ -177,7 +177,7 @@ def describeVote(vote,typeDescript):
         return strRet
     strSenators = ', '.join([av.rep.officialName() for av in allVoters])
     strRet += ' <b>Senators Who Voted Against Party:</b> %s\n' % strSenators
-    
+
     if typeDescript and typeDescript.find('contr') > -1:
         lsAll = []
         if typeDescript=="contrSector":
@@ -185,13 +185,13 @@ def describeVote(vote,typeDescript):
             for rc in rcs:
                 if rc.mlBusiness.industry.sector.name not in lsAll:
                     lsAll.append(rc.mlBusiness.industry.sector.name)
-            
+
         elif typeDescript=="contrInd":
             rcs = RepContributionReport.objects.filter(vote=vote)
             for rc in rcs:
                 if rc.mlBusiness.industry.name not in lsAll:
                     lsAll.append(rc.mlBusiness.industry.name)
-            
+
 
         elif typeDescript=="contrBus":
             rcs = RepContributionReport.objects.filter(vote=vote)
@@ -204,7 +204,7 @@ def describeVote(vote,typeDescript):
         strRet += "<b>Contributions From: </b>"
         strRet += ', '.join(lsAll)
         strRet += "<br>"
-    
+
     #strRet += '<a href="http://' + ref_url + '/votes/session=' + str(vote.bill.congress.number) + '&amp;bill_prefix=' + vote.bill.prefix + '&amp;bill_number=' + str(vote.bill.number) + '&amp;vote_number=' + str(vote.number) + '">View Full Report Here</a><br>'
     return strRet
 
@@ -219,7 +219,7 @@ def isOutlier(num,lsAllNums,only_high=False):
     list2 = lsAllNums[int(len(lsAllNums)/2+0.5):]
     high_range = numpy.median(list2)
     low_range = numpy.median(list1)
-    
+
     mean=numpy.mean(lsAllNums)
     z_index = abs(num-mean)/numpy.std(lsAllNums)
     if num < low_range and z_index > 3 and only_high==False:
@@ -243,7 +243,7 @@ def isOutlierStats(num,pcStat):
         z_index = float(abs(num-pcStat.mean))/pcStat.std
     except Exception:
         z_index=0
-        
+
     if num < median and z_index > 3:
         return True,'LOW'
     elif num > median and z_index > 3:
@@ -263,7 +263,7 @@ def findJonesSubTopicPres(descript,lsTopic,score=0.09,sameAsLast=False):
     stopWordPerTopic = simplejson.loads(open(CCU_DATA_PATH + 'topics_stopwords.txt').read())
     ret = {}
 
-    if not sameAsLast:    
+    if not sameAsLast:
         clear()
         for topic in lsTopic:
             if not topic in dStopWordTopic:
@@ -271,21 +271,21 @@ def findJonesSubTopicPres(descript,lsTopic,score=0.09,sameAsLast=False):
                     stopWords = stopWordPerTopic[topic.name]
                 except Exception:
                     pass
-                    
+
                 for to in JonesSubTopic.objects.filter(topic=topic):
                     txt = to.name + ' ' + to.descript
                     for word in stopWords:
-                         reI = re.compile('\W+' + word + '\W+',re.I) 
+                         reI = re.compile('\W+' + word + '\W+',re.I)
                          '''complete words'''
-                         txt = reI.sub(' ',txt)  
-                         reI = re.compile('\W+' + word + '\w+',re.I) 
+                         txt = reI.sub(' ',txt)
+                         reI = re.compile('\W+' + word + '\w+',re.I)
                          '''stemmed words'''
                          txt = reI.sub(' ',txt)
                     add_document(to.name,txt)
                     dStopWordTopic[to.name] = txt
             else:
                 add_document(to.name,dStopWordTopic[to.name])
-                
+
     tns = classify_document(descript)
     #tns2 = {}
     #for key,val in tns.items():
@@ -295,7 +295,7 @@ def findJonesSubTopicPres(descript,lsTopic,score=0.09,sameAsLast=False):
     #print tns
     if tns.keys() == []:
         return tns
-    
+
     tns = zip(tns.values(),tns.keys())
     tns.sort()
     tns.reverse()
@@ -317,7 +317,7 @@ def findJonesSubTopicPresUniqueWords(descript,lsTopic,score=0.09,sameAsLast=Fals
         except Exception:
             return
 
-        if not sameAsLast:    
+        if not sameAsLast:
             clear()
             for topic in lsTopic:
                 if not topic in dStopWordTopic:
@@ -325,10 +325,10 @@ def findJonesSubTopicPresUniqueWords(descript,lsTopic,score=0.09,sameAsLast=Fals
                     for to in JonesSubTopic.objects.filter(topic=topic):
                         txt = to.name + ' ' + to.descript
                         for word in stopWords:
-                             reI = re.compile('\W+' + word + '\W+',re.I) 
+                             reI = re.compile('\W+' + word + '\W+',re.I)
                              '''complete words'''
-                             txt = reI.sub(' ',txt)  
-                             reI = re.compile('\W+' + word + '\w+',re.I) 
+                             txt = reI.sub(' ',txt)
+                             reI = re.compile('\W+' + word + '\w+',re.I)
                              '''stemmed words'''
                              txt = reI.sub(' ',txt)
                         add_document_unique(to.name,txt)
@@ -365,8 +365,8 @@ def findJonesSubTopicPresUniqueWords(descript,lsTopic,score=0.09,sameAsLast=Fals
 def findJonesSubTopicPresTitleOnly(descript,lsTopic,score=0.09,sameAsLast=False):
         stopWordPerTopic = simplejson.loads(open(CCU_DATA_PATH + 'topics_stopwords.txt').read())
         ret = {}
-        
-        if not sameAsLast:    
+
+        if not sameAsLast:
              clear()
              for topic in lsTopic:
                 if not topic in dStopWordTopic:
@@ -374,17 +374,17 @@ def findJonesSubTopicPresTitleOnly(descript,lsTopic,score=0.09,sameAsLast=False)
                     for to in JonesSubTopic.objects.filter(topic=topic):
                         txt = to.name + ' ' + to.descript
                         for word in stopWords:
-                             reI = re.compile('\W+' + word + '\W+',re.I) 
+                             reI = re.compile('\W+' + word + '\W+',re.I)
                              '''complete words'''
-                             txt = reI.sub(' ',txt)  
-                             reI = re.compile('\W+' + word + '\w+',re.I) 
+                             txt = reI.sub(' ',txt)
+                             reI = re.compile('\W+' + word + '\w+',re.I)
                              '''stemmed words'''
                              txt = reI.sub(' ',txt)
                         add_document(to.name,txt)
                         dStopWordTopic[to.name] = txt
                 else:
                     add_document(to.name,dStopWordTopic[to.name])
-        
+
         tns = classify_document(descript)
         tns2 = {}
         for key,val in tns.items():
@@ -414,7 +414,7 @@ def createDate2(dateStr):
     year = int(dateStr.split(',')[-1])
     day = int(dateStr.split(',')[0].split()[1])
     return date(year,month,day)
-    
+
 '''2009-09-19'''
 def createDate3(dateStr):
     year = int(dateStr.split('-')[0])
@@ -435,7 +435,7 @@ def createDate5(dateStr):
     month = int(dateStr.split('-')[0])
     day = int(dateStr.split('-')[1])
     return date(year,month,day)
-    
+
 if __name__=="__main__":
     print isPVIOutlier(Rep.objects.filter(congress__number=112,lastName='Stabenow')[0],Vote.objects.filter(bill__congress__number=112)[0])
     assert 0

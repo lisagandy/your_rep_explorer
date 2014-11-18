@@ -1,12 +1,12 @@
 from django.db import models
-import simplejson
+import json as simplejson
 from datetime import date,timedelta
 from django.db.models import *
 import sys
-from ccu_utilities import *
+from utilities.ccu_utilities import *
 from paths import *
 from django import forms
-from decimal import Decimal 
+from decimal import Decimal
 
 NUM_DAYS_CONTRIBUTION=730
 
@@ -19,11 +19,11 @@ try:
      industryPercentD = simplejson.load(open(CCU_DATA_PATH  + 'industryPercentD.json'))
 except Exception:
     industryPercentD = {}
-    
+
 try:
     contrD = simplejson.load(open(CCU_DATA_PATH + 'contrD.json'))
 except Exception:
-    contrD = {}    
+    contrD = {}
 
 VOTE_CHOICES=(
     ('AYE','Aye'),
@@ -56,14 +56,14 @@ BILL_STATUS_CHOICES=(
     ('PASS_BACK:SENATE','PASS_BACK:SENATE'),
     ('REPORTED','REPORTED'),
     ('PROV_KILL:SUSPENSIONFAILED','PROV_KILL:SUSPENSIONFAILED'),
-    ('VETOED:OVERRIDE_FAIL_ORIGINATING:HOUSE','VETOED:OVERRIDE_FAIL_ORIGINATING:HOUSE'), 
-    ('PASSED:CONCURRENTRES','PASSED:CONCURRENTRES'), 
-    ('FAIL:ORIGINATING:HOUSE','FAIL:ORIGINATING:HOUSE'), 
-    ('PASSED:SIMPLERES','PASSED:SIMPLERES'), 
-    ('PASS_OVER:SENATE','PASS_OVER:SENATE'), 
-    ('PROV_KILL:CLOTUREFAILED','PROV_KILL:CLOTUREFAILED'), 
+    ('VETOED:OVERRIDE_FAIL_ORIGINATING:HOUSE','VETOED:OVERRIDE_FAIL_ORIGINATING:HOUSE'),
+    ('PASSED:CONCURRENTRES','PASSED:CONCURRENTRES'),
+    ('FAIL:ORIGINATING:HOUSE','FAIL:ORIGINATING:HOUSE'),
+    ('PASSED:SIMPLERES','PASSED:SIMPLERES'),
+    ('PASS_OVER:SENATE','PASS_OVER:SENATE'),
+    ('PROV_KILL:CLOTUREFAILED','PROV_KILL:CLOTUREFAILED'),
     ('PASS_BACK:HOUSE','PASS_BACK:HOUSE'),
-    ('PASSED:BILL','PASSED:BILL'), 
+    ('PASSED:BILL','PASSED:BILL'),
     ('FAIL:ORIGINATING:SENATE','FAIL:ORIGINATING:SENATE')
 )
 
@@ -178,7 +178,7 @@ class Congress(models.Model):
     endDate = models.DateField()
     def __unicode__(self):
         return str(self.number) + ' Congress'
-        
+
     class Meta:
         verbose_name_plural = "Congressional Sessions"
 
@@ -189,50 +189,50 @@ class State(models.Model):
 
     def __unicode__(self):
         return self.name.title()
-        
+
 class District(models.Model):
     state = models.ForeignKey(State)
-    districtNum = models.IntegerField(max_length=10)   
-    
+    districtNum = models.IntegerField(max_length=10)
+
     def __unicode__(self):
         return str(self.state) + ' ' + str(self.districtNum)
     class Meta:
         unique_together = ['state','districtNum']
-        
-        
+
+
 class StatePop(models.Model):
     state = models.ForeignKey(State)
     pop = models.IntegerField(max_length=10)
     date = models.DateField()
-    
+
     def __unicode__(self):
         return str(self.state) + ' ' + str(self.pop) + ' ' + str(self.date)
     class Meta:
         unique_together = ['state','date']
         verbose_name_plural = "State Populations"
- 
+
 def pviProperString(self):
      strRet = ""
      if self.demCook: strRet += 'D+'
      else: strRet += 'R+'
      strRet += str(self.scoreCook)
-     
-     return strRet 
-        
+
+     return strRet
+
 class StatePVI(models.Model):
-    state = models.ForeignKey(State) 
+    state = models.ForeignKey(State)
     demCook = models.BooleanField(default=True) #demCook
     scoreCook = models.IntegerField() #scoreCook
     year = models.IntegerField() #year
     def __unicode__(self):
         strRet = str(self.state) + ':'
         return strRet + pviProperString(self)
-    
+
     class Meta:
         verbose_name_plural = "State PVI"
 
 class DistrictPVI(models.Model):
-    district = models.ForeignKey(District) 
+    district = models.ForeignKey(District)
     demCook = models.BooleanField(default=True)
     scoreCook = models.IntegerField()
     year = models.IntegerField()
@@ -245,7 +245,7 @@ class DistrictPVI(models.Model):
         return strRet
     class Meta:
         verbose_name_plural = "District PVI"
-        
+
 class JonesTopic(models.Model):
     name = models.CharField(max_length=250,primary_key=True)
     code = models.IntegerField(null=True,blank=True)
@@ -259,15 +259,15 @@ class JonesSubTopic(models.Model):
     descript = models.TextField()
     topic = models.ForeignKey(JonesTopic)
     code = models.IntegerField(null=True,blank=True)
-    
+
     def __unicode__(self):
         return self.topic.name + ':' + self.name
     class Meta:
-        unique_together=['name','topic']   
+        unique_together=['name','topic']
         verbose_name_plural = "Jones Subtopics"
-        
+
 class MapLightSector(models.Model):
-    name = models.CharField(max_length=100,primary_key=True)     
+    name = models.CharField(max_length=100,primary_key=True)
     officialName = models.CharField(max_length=100)
     code = models.IntegerField()
 
@@ -275,27 +275,27 @@ class MapLightSector(models.Model):
         return self.name
     class Meta:
         verbose_name_plural = "Maplight Sectors"
-        
+
 
 class MapLightIndustry(models.Model):
     sector = models.ForeignKey(MapLightSector)
     name = models.CharField(max_length=100)
     code = models.IntegerField()
-    
+
     def __unicode__(self):
         return self.name
     class Meta:
-        unique_together=['name','sector'] 
+        unique_together=['name','sector']
         verbose_name_plural = "Maplight Industries"
 
-class MapLightBusiness(models.Model):   
+class MapLightBusiness(models.Model):
     industry = models.ForeignKey(MapLightIndustry)
     name = models.CharField(max_length=100)
     subtopics = models.ManyToManyField(JonesSubTopic,blank=True,null=True)
     mlID = models.CharField(max_length=50)
 
     def __unicode__(self):
-        return str(self.industry.sector)+ ':' + str(self.industry) + ':' + self.name     
+        return str(self.industry.sector)+ ':' + str(self.industry) + ':' + self.name
     class Meta:
         unique_together=['industry','name']
         verbose_name_plural = "Maplight Businesses"
@@ -318,7 +318,7 @@ def generateName(rep,creds=True,firstName=True,title=True):
     if not rep.state and not rep.district:
         #print 'HERE'
         return name
-    
+
     if rep.state:
         stateAbbrev = pyU.getStateAbbrev(rep.state.name)
     else:
@@ -339,21 +339,21 @@ def generateName(rep,creds=True,firstName=True,title=True):
 
 class Rep(models.Model):
     repID = models.CharField(max_length=50) #osID
-    repGovTrackID = models.CharField(max_length=50) 
+    repGovTrackID = models.CharField(max_length=50)
     congress = models.ForeignKey(Congress)
 
     firstName = models.CharField(max_length=50) #'''must have'''
     lastName = models.CharField(max_length=50) #'''must have'''
     nickName = models.CharField(max_length=50,null=True,blank=True)
     middleName = models.CharField(max_length=50,null=True,blank=True)
-    
+
     party = models.CharField(choices=PARTY_CHOICES,max_length=2) #'''must have'''
     state = models.ForeignKey(State,null=True,blank=True)
     district = models.ForeignKey(District,null=True,blank=True)
     senator = models.BooleanField(default=True)
     senatorClass = models.IntegerField(null=True,blank=True)
 
-    swornInDate = models.DateField() 
+    swornInDate = models.DateField()
     endDate = models.DateField()
     website = models.CharField(max_length=200,null=True,blank=True)
     religion = models.CharField(max_length=50,null=True,blank=True)
@@ -375,8 +375,8 @@ class Rep(models.Model):
         if self.senator:
             return str(self.congress) + ':' + self.lastName + ',' + self.firstName + ' ' + strRep + ' ' + str(self.state) + ' ' + str(self.party)
         else:
-            return str(self.congress) + ':' + self.lastName + ',' + self.firstName + ' ' + strRep + ' ' + str(self.district) + ' ' + str(self.party)   
-            
+            return str(self.congress) + ':' + self.lastName + ',' + self.firstName + ' ' + strRep + ' ' + str(self.district) + ' ' + str(self.party)
+
     class Meta:
         unique_together=['repID','congress']
     def officialPartyTitle(self):
@@ -390,7 +390,7 @@ class Rep(models.Model):
         return generateName(self,creds=True,firstName=True,title=True)
     def officialNameWOCred(self):
         return generateName(self,creds=False,firstName=True, title=False)
-    
+
 class RepADA(models.Model):
     rep = models.ForeignKey(Rep)
     adaScore = models.IntegerField()
@@ -420,12 +420,12 @@ class RepWithParty(models.Model):
             return rank + 1
         except Exception:
             return -1
-        
+
     class Meta:
         unique_together = ['rep','congress']
 
 
-            
+
 class RepContribution(models.Model):
     rbID = models.CharField(primary_key=True,max_length=255)
     pubDate = models.DateTimeField()
@@ -439,7 +439,7 @@ class RepContribution(models.Model):
     contribEmployer = models.CharField(max_length=1000,null=True,blank=True)
     contribState = models.ForeignKey(State,null=True)
     contribZipCode = models.CharField(max_length=10,null=True,blank=True)
-    isPAC = models.BooleanField()
+    isPAC = models.NullBooleanField()
     def __unicode__(self):
         if self.contribZipCode:
             zipcode=self.contribZipCode
@@ -448,14 +448,14 @@ class RepContribution(models.Model):
         if self.contribName:
             contribName=self.contribName
         else:contribName="None"
-        
+
         if self.contribEmployer:
             contribEmp = self.contribEmployer
         else: contribEmp="None"
         return contribName + ':' + contribEmp + ':' + str(self.dateContr) + ':' + str(self.amountContr) + ':' + str(self.contribID) + self.mlBusiness.name
-            
-        return str(self.rep)+ ':' + str(self.amountContr) + ':' + str(self.mlBusiness) + ':' + str(self.dateContr) + ':' + str(self.contribState) + ':' + str(self.isPAC) + ':' 
-        
+
+        return str(self.rep)+ ':' + str(self.amountContr) + ':' + str(self.mlBusiness) + ':' + str(self.dateContr) + ':' + str(self.contribState) + ':' + str(self.isPAC) + ':'
+
 class NAICS_Industry(models.Model):
     code = models.CharField(max_length=10,primary_key=True)
     name = models.CharField(max_length=500)
@@ -495,7 +495,7 @@ class NAICS_Locale2(models.Model):
    class Meta:
        unique_together = ['state','naicsIndustry','beginQuarter','beginYear','endQuarter','endYear']
        verbose_name_plural = "NAICS Industries per State"
-         
+
 class NAICS_Locale(models.Model):
     state = models.ForeignKey(State,null=True,blank=True)
     numEmployees = models.IntegerField()
@@ -506,7 +506,7 @@ class NAICS_Locale(models.Model):
     endYear = models.IntegerField()
     def __unicode__(self):
         return str(self.state) + ':' + str(self.numEmployees) + ':' + str(self.naicsIndustry) + ':' + str(self.beginQuarter) + ':' + str(self.endQuarter) + ':' + str(self.beginYear) + ':' + str(self.endYear)
-    
+
     def percentage(self):
         if self.state:
             try:
@@ -514,12 +514,12 @@ class NAICS_Locale(models.Model):
             except Exception:
                 popObj = StatePop.objects.filter(state=self.state).order_by('-date')[0]
             pop = popObj.pop
-            
+
             return (float(self.numEmployees) / float(pop)) * 100
         else:
             print 'FIX THIS IN NAICS LOCALE'
             assert 0
-        
+
     class Meta:
         unique_together = ['state','naicsIndustry','beginQuarter','beginYear','endQuarter','endYear']
         verbose_name_plural = "NAICS Industries per State"
@@ -527,12 +527,12 @@ class NAICS_Locale(models.Model):
 class Election(models.Model):
     date = models.DateField(primary_key=True)
     senateClass = models.IntegerField(null=True,blank=True)
-    
+
     def __unicode__(self):
         if self.senateClass:
             return 'Election ' + str(self.date) + ':Senate Class ' + str(self.senateClass)
         else:
-            return 'Election ' + str(self.date) 
+            return 'Election ' + str(self.date)
 
 def lookUpChoice(text,choice):
     for item in choice:
@@ -540,34 +540,34 @@ def lookUpChoice(text,choice):
             return item[1]
     return None
 
-            
+
 class PredElection(models.Model):
     date =  models.DateField()
     election = models.ForeignKey(Election)
     rep = models.ForeignKey(Rep)
     pred = models.CharField(choices=PRED_ELEC_CHOICES,max_length=15)
-    
-    
-    
+
+
+
     def __unicode__(self):
         return str(self.rep) + ':' + str(self.election) + ':Prediction date:' + str(self.date) + ':' + self.pred
-    
+
     def longPred(self):
         return lookUpChoice(self.pred,PRED_ELEC_CHOICES)
     class Meta:
         unique_together=['date','rep','election','pred']
-    
+
 class Committee(models.Model):
-    congress = models.ForeignKey(Congress) 
-    name = models.CharField(max_length=50) #name of committee   
-    code = models.CharField(max_length=10)   
+    congress = models.ForeignKey(Congress)
+    name = models.CharField(max_length=50) #name of committee
+    code = models.CharField(max_length=10)
     reps = models.ManyToManyField(Rep)
     chair = models.ForeignKey(Rep,related_name='chair',null=True,blank=True)
     rankingMember = models.ForeignKey(Rep,related_name='ranking_member',null=True,blank=True)
     viceChair = models.ForeignKey(Rep,related_name='vice_chair',null=True,blank=True)
     typeComm = models.CharField(choices=COMMITTEE_TYPE_CHOICES,max_length=20)
     topics = models.ManyToManyField(JonesTopic)
-    
+
     class Meta:
         unique_together = ['congress','code']
     def __unicode__(self):
@@ -581,17 +581,17 @@ class BillStatus(models.Model):
     def __unicode__(self):
         return 'STATUS'
         #return str(self.status) + ':' + str(self.date)
-        
+
     class Meta:
         unique_together = ['status','date']
-    
+
 class BillTitle(models.Model):
     title = models.TextField()
-    typeTitle = models.CharField(TITLE_CHOICES,max_length=50) 
-    whenTitle = models.CharField(TITLE_STATUS_CHOICES,max_length=50) 
+    typeTitle = models.CharField(TITLE_CHOICES,max_length=50)
+    whenTitle = models.CharField(TITLE_STATUS_CHOICES,max_length=50)
     def __unicode__(self):
         return self.title + ':' + self.typeTitle + ':' + self.whenTitle
-    
+
     class Meta:
         unique_together = ['title','typeTitle','whenTitle']
 
@@ -599,12 +599,12 @@ class BillTitle(models.Model):
 
 
 class BillSubject(models.Model):
-    name = models.CharField(max_length=255,primary_key=True) 
+    name = models.CharField(max_length=255,primary_key=True)
     descript = models.TextField()
-    subtopics = models.ManyToManyField(JonesSubTopic)    
+    subtopics = models.ManyToManyField(JonesSubTopic)
     def __unicode__(self):
         return self.name
-       
+
 class Organization(models.Model):
     orgID = models.CharField(primary_key=True,max_length=50)
     orgName = models.CharField(max_length=500)
@@ -619,11 +619,11 @@ class OrgName(models.Model):
         unique_together = ['org','name']
     def __unicode__(self):
         return self.name + ':' + str(self.org)
-        
+
 class OrgStance(models.Model):
     org = models.ForeignKey(Organization)
     dateStance = models.DateField(null=True,blank=True)
-    against = models.BooleanField()
+    against = models.NullBooleanField()
     wholeCite = models.TextField()
     urlCite = models.CharField(max_length=300)
     class Meta:
@@ -633,10 +633,10 @@ class OrgStance(models.Model):
         if not self.against: retStr += ':FOR BILL'
         else: retStr += ':AGAINST BILL'
         return retStr
-    
+
 #later examine and refine this...
 class Bill(models.Model):
-    congress = models.ForeignKey(Congress) 
+    congress = models.ForeignKey(Congress)
     billNum = models.CharField(max_length=20) #get billNum
     prefix = models.CharField(max_length=10)
     senate=models.BooleanField(default=True) #get senate or not
@@ -668,7 +668,7 @@ class Bill(models.Model):
                 return titles[0].title
             return None
     def cleanedSummary(self):
-        return pyU.sXMLUnescape(self.summary)        
+        return pyU.sXMLUnescape(self.summary)
     def twoPartSummary(self):
         summary = self.cleanedSummary()
         lsSummary = summary.split(' ')
@@ -677,16 +677,16 @@ class Bill(models.Model):
         else:
             firstPart = ' '.join(lsSummary[0:20])
             restPart = ' '.join(lsSummary[20:])
-            return [firstPart,restPart]   
+            return [firstPart,restPart]
     def groupedByTopic(self):
         return groupedByTopic(self)
-    
+
 class AmendStatus(models.Model):
     status = models.TextField()
     statusDate = models.DateField(null=True,blank=True)
     def __unicode__(self):
         return str(self.status) + ':' + str(self.statusDate)
-        
+
 class Amendment(models.Model):
     bill = models.ForeignKey(Bill) #get bill number
     number = models.CharField(max_length=20) #get amendment number
@@ -736,10 +736,10 @@ class Vote(models.Model):
     bill = models.ForeignKey(Bill)  #4. look up bill info
     number = models.IntegerField() #1. get vote number
     dateVote = models.DateField()
-    hasAmendment = models.BooleanField() #2. look if amendment or bill
+    hasAmendment = models.NullBooleanField() #2. look if amendment or bill
     amendment = models.ForeignKey(Amendment,null=True,blank=True) #3. look up amendment info
     category = models.ForeignKey(VoteCategory)
-    voteType = models.ForeignKey(VoteType)    
+    voteType = models.ForeignKey(VoteType)
     question = models.TextField()
     percentNeeded = models.FloatField()
     percentGotten = models.FloatField()
@@ -748,7 +748,7 @@ class Vote(models.Model):
     numNV = models.IntegerField()
     numPresent = models.IntegerField()
     result = models.ForeignKey(VoteResult)
-    subtopics = models.ManyToManyField(JonesSubTopic) 
+    subtopics = models.ManyToManyField(JonesSubTopic)
     repVotes = models.ManyToManyField(RepVote,related_name='repVotes')
     active = models.BooleanField(default=True)
     topicAssigned = models.BooleanField(default=False)
@@ -758,51 +758,51 @@ class Vote(models.Model):
     demExact = models.BooleanField(default=False)
     repExact = models.BooleanField(default=False)
     senateVote = models.BooleanField(default=False)
-    
+
     class Meta:
         unique_together = ['bill','number']
     def __unicode__(self):
         return str(self.bill) + ':' + str(self.number) + ':' + str(self.dateVote)
-    
+
     def numDemsAye(self):
         return self.repVotes.filter(rep__party='D',voteCast='AYE').count()
-        
+
     def numRepsAye(self):
         return self.repVotes.filter(rep__party='R',voteCast='AYE').count()
-    
+
     def numOtherAye(self):
         return self.repVotes.filter(voteCast='AYE').exclude(rep__party__in=['R','D']).count()
-         
+
     def numDemsNay(self):
         return self.repVotes.filter(rep__party='D',voteCast='NAY').count()
-            
+
     def numRepsNay(self):
-        return self.repVotes.filter(rep__party='R',voteCast='NAY').count()      
-    
+        return self.repVotes.filter(rep__party='R',voteCast='NAY').count()
+
     def numOtherNay(self):
         return self.repVotes.filter(voteCast='NAY').exclude(rep__party__in=['R','D']).count()
-        
+
     def numDemsPresent(self):
-        return self.repVotes.filter(rep__party='D',voteCast='PR').count()              
-    
+        return self.repVotes.filter(rep__party='D',voteCast='PR').count()
+
     def numRepsPresent(self):
-        return self.repVotes.filter(rep__party='R',voteCast='PR').count() 
-    
+        return self.repVotes.filter(rep__party='R',voteCast='PR').count()
+
     def numOtherPresent(self):
-        return self.repVotes.filter(voteCast='PR').exclude(rep__party__in=['R','D']).count()     
-    
+        return self.repVotes.filter(voteCast='PR').exclude(rep__party__in=['R','D']).count()
+
     def numDemsNV(self):
-        return self.repVotes.filter(rep__party='D',voteCast='NV').count()                
-    
+        return self.repVotes.filter(rep__party='D',voteCast='NV').count()
+
     def numRepsNV(self):
-        return self.repVotes.filter(rep__party='R',voteCast='NV').count()      
-    
+        return self.repVotes.filter(rep__party='R',voteCast='NV').count()
+
     def numOtherNV(self):
         return self.repVotes.filter(voteCast='NV').exclude(rep__party__in=['R','D']).count()
-    
-    
-    
-    
+
+
+
+
 class AnomVoters(models.Model):
     vote = models.ForeignKey(Vote,primary_key=True)
     demVoters = models.ManyToManyField(RepVote,related_name='dem_voters')
@@ -821,25 +821,25 @@ class StatePVIReport(models.Model):
            return str(self.vote) + ':' + str(self.statePVI) + ':' + str(self.rep)
     def properStrScore(self):
         return pviProperString(self.statePVI)
-    
+
     def properStrScoreEscape(self):
         return pviProperString(self.statePVI).replace('+',"&#43;")
-        
+
     def properStrAvg(self):
         #return 'stuff'
         intAvg = int(self.averageScore+0.5)
         if self.averageScore < 0:
-            
+
             return 'R+' + str(abs(intAvg))
         else:
             return 'D+' + str(intAvg)
-        
+
     def properStrAvgEscapes(self):
         return self.properStrAvg.replace('+',"&#43;")
-        
+
     class Meta:
            unique_together = ['vote','statePVI','rep']
-    
+
 
 class RepWithPartyReport(models.Model):
     vote =  models.ForeignKey(Vote)
@@ -847,7 +847,7 @@ class RepWithPartyReport(models.Model):
     def __unicode__(self):
         return str(self.vote) + ':' + str(self.repWithParty)
     class Meta:
-        unique_together = ['vote','repWithParty']   
+        unique_together = ['vote','repWithParty']
 
 class PredElectionReport(models.Model):
     vote =  models.ForeignKey(Vote)
@@ -868,19 +868,19 @@ class ChairCommitteeReport(models.Model):
             return True
         else:
             return False
-    
+
     def isViceChair(self):
         if self.committee.viceChair==self.rep:
             return True
         else:
             return False
-    
+
     def isRankingMember(self):
         if self.committee.rankingMember==self.rep:
             return True
         else:
-            return False    
-    
+            return False
+
     class Meta:
         unique_together = ['vote','rep','committee']
 
@@ -889,20 +889,20 @@ def addIndustryPercentD(voterIndustry):
      lsAll = []
      for state in State.objects.all():
          objs = NAICS_Locale.objects.filter(naicsIndustry=voterIndustry.naicsIndustry,state=state).order_by('-endYear')
-     
+
          if objs.count() > 0:
              lsAll.append(objs[0].percentage())
-         else: 
+         else:
              lsAll.append(0)
 
      lsAll.sort()
      strLookup = getLookupStrInd(voterIndustry)
      industryPercentD[strLookup] = lsAll
-     simplejson.dump(industryPercentD,open(CCU_DATA_PATH + 'industryPercentD.json','w'))     
+     simplejson.dump(industryPercentD,open(CCU_DATA_PATH + 'industryPercentD.json','w'))
 
 def getLookupStrInd(voterIndustry):
     return str(voterIndustry.naicsIndustry)
-        
+
 class NAICSIndustryReport(models.Model):
     vote = models.ForeignKey(Vote)
     rep = models.ForeignKey(Rep)
@@ -911,10 +911,10 @@ class NAICSIndustryReport(models.Model):
     class Meta:
         unique_together = ['vote','rep','naicsLocale']
     def __unicode__(self):
-        return str(self.vote.number) + ':' + str(self.rep) + ':' + str(self.naicsLocale)    
+        return str(self.vote.number) + ':' + str(self.rep) + ':' + str(self.naicsLocale)
     def percentage(self):
         return self.naicsLocale.percentage()
- 
+
 
 def addContrD(vote,rep,bus,oldDate):
     #oldDate = vote.dateVote-timedelta(days=NUM_DAYS_CONTRIBUTION)
@@ -935,7 +935,7 @@ def addContrD(vote,rep,bus,oldDate):
          else:
              lsTotalAmt.append(0)
              #print 0
-     
+
     lsTotalAmt.sort()
     #print lsTotalAmt
     contrD[lookupStr] = lsTotalAmt
@@ -976,7 +976,7 @@ class RepContributionAverage(models.Model):
         return str(self.endDate) + ':' + str(self.bus) + ':' + str(self.totalAmt/float(self.numReps))
 
 
-#Contributions made to anonymous voters       
+#Contributions made to anonymous voters
 class RepContributionReport(models.Model):
     vote = models.ForeignKey(Vote) #look up by vote
     rep = models.ForeignKey(Rep) #look up by anomalous voter
@@ -985,19 +985,19 @@ class RepContributionReport(models.Model):
     totalAmt = models.IntegerField() #total amount
     rcs = models.ManyToManyField(RepContribution,related_name='all_rcs')
     #percent = models.FloatField()
-    
+
     #orgStanceMapping = models.BooleanField()
     orgstancesFor = models.ManyToManyField(OrgStance,related_name='orgstance_for')
     orgstancesAgainst=models.ManyToManyField(OrgStance,related_name='orgstance_against')
     relRCSFor = models.ManyToManyField(RepContribution,related_name='rc_for')
     relRCSAgainst=models.ManyToManyField(RepContribution,related_name='rc_against')
     amtMoneyFor = models.FloatField(default=0)
-    amtMoneyAgainst=models.FloatField(default=0)    
-    obeyedCompany = models.BooleanField()
+    amtMoneyAgainst=models.FloatField(default=0)
+    obeyedCompany = models.NullBooleanField()
 
     def __unicode__(self):
-        return str(self.rep) + ':' + str(self.bus.industry.sector) 
-        #return str(self.totalAmt) + ':' + str(self.rep) + ':' + str(self.bus) + ':' + str(self.endDate)         
+        return str(self.rep) + ':' + str(self.bus.industry.sector)
+        #return str(self.totalAmt) + ':' + str(self.rep) + ':' + str(self.bus) + ':' + str(self.endDate)
 
 class RepOrgStanceMoneyVote(models.Model):
     repReport = models.ForeignKey(RepContributionReport)
@@ -1013,7 +1013,7 @@ class RepOrgStanceMoneyVote(models.Model):
 class VoteReport(models.Model):
     hasInd = models.BooleanField(default=False)
     hasContr = models.BooleanField(default=False)
-    hasOrgs = models.BooleanField()
+    hasOrgs = models.NullBooleanField()
     hasComm = models.BooleanField(default=False)
     hasDiff = models.BooleanField(default=False)
     hasElec = models.BooleanField(default=False)
@@ -1022,18 +1022,18 @@ class VoteReport(models.Model):
     def __unicode__(self):
         return str(self.vote) + ':' + str(self.hasInd)
 
-#GET ALL VOTERS WHO VOTED AGAINST PARTY    
+#GET ALL VOTERS WHO VOTED AGAINST PARTY
 def getAllAnomVoters(vote):
     allVoters=[]
     try:
-        allVoters = [av for av in AnomVoters.objects.get(vote=vote).demVoters.all().order_by('rep__lastName')]  
+        allVoters = [av for av in AnomVoters.objects.get(vote=vote).demVoters.all().order_by('rep__lastName')]
         allVoters.extend([av for av in AnomVoters.objects.get(vote=vote).repVoters.all().order_by('rep__lastName')])
     except Exception,ex:
         #print ex
         return None
-        
+
     return allVoters
-    
+
 class PercentWithParty(models.Model):
     rep = models.ForeignKey(Rep)
     subtopic = models.ForeignKey(JonesSubTopic)
@@ -1045,11 +1045,11 @@ class PercentWithParty(models.Model):
     def percentage(self):
         if self.numWithParty == 0 or self.numVotes==0:
             return 0
-            
+
         return (self.numWithParty/float(self.numVotes)) * 100
     def __unicode__(self):
         return str(self.rep) + ':' + str(self.subtopic) + ':' + str(self.lastVoteDate) + ':' +str(self.numWithParty)+':' + str(self.numVotes) + ':' + str(self.percentage())
-    
+
 
 class PercentWithPartyStats(models.Model):
     subtopic = models.ForeignKey(JonesSubTopic)
@@ -1063,15 +1063,13 @@ class PercentWithPartyStats(models.Model):
         unique_together = ['subtopic','lastVoteDate']
     def __unicode__(self):
         return str(self.subtopic) + ':' + str(self.lastVoteDate) + ':' + str(self.mean) + ':' + str(self.median) + ':' + str(self.std) + ':' + str(self.high_range) + ':' + str(self.low_range)
-    
+
 
 class TempRepPoints(models.Model):
     rep = models.ForeignKey(Rep)
     vote = models.ForeignKey(Vote)
     points = models.IntegerField(default=0)
     class Meta:
-        unique_together = ['rep','vote']    
+        unique_together = ['rep','vote']
     def __unicode__(self):
         return str(self.rep) + ":" + str(self.points) + ":" + str(self.vote)
-    
-        

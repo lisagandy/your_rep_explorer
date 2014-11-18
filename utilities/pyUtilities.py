@@ -22,7 +22,7 @@ except ImportError:
 import unicodedata
 from os import popen,system
 import urllib2
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 #from pyPaths import *
 
@@ -62,10 +62,10 @@ _hOriginalOutput = sys.stdout
 def stripExtraSpaces(text):
     """
     Ensures that there is only one space between words.
-    
+
     @type text: C{string}
     @param text: a string with multiple spaces between words.
-    
+
     @rtype: C{string}
     @return: the string with only one space between words.
     """
@@ -123,12 +123,12 @@ def removePunctuation(text, spaces = True,lsExcept=[]):
 
 def numberMonth(strMonth):
     months = ['January','February','March','April','May','June','July','August','September','October','November','December']
-    
+
     for index,month in enumerate(months):
         if month.find(strMonth) > -1:
             #print strMonth
             return index+1
-            
+
     return -1
 
 def cleanBeautifulSoup(contents):
@@ -216,7 +216,7 @@ class ThreadSafeCounter:
         return self.Decrement(iDecrement)
     def __int__(self):
         return self.value
-    
+
 class CachedAccess:
     def __init__(self, func, size):
         self._cache = {}
@@ -234,7 +234,7 @@ class CachedAccess:
                 del self._cache
         self._lock.release()
         return ret
-    
+
 class SettableGenerator(object):
     def __init__(self, gen):
         self._gen = gen
@@ -290,13 +290,13 @@ def toascii(text):
         text = unicodedata.normalize('NFKD', text)
     ret = [c if ord(c) < 128 else _char_map.get(ord(c), '') for c in text]
     ret = ''.join(ret)
-    return ret    
+    return ret
 
-        
+
 def dump_dict(d):
     '''Returns a string representation of a dict that you can hash off of.  dump_dict(d1) == dump_dict(d2) if d1 == d2'''
     ret = ','.join(['key(%s)=value(%s)' % (k, v) for k, v in sorted(d.items())])
-    return ret 
+    return ret
 
 def flatten(lists):
     ret = []
@@ -306,12 +306,12 @@ def flatten(lists):
         else:
             ret.append(l)
     return ret
- 
-def wordDifficulty(word,corpus=None): 
+
+def wordDifficulty(word,corpus=None):
     """You can now hit the speech server like this:"""
     """http://yorda.cs.northwestern.edu:8080/get_difficulty?word=jiahui"""
-    """And get back a difficulty score of how hard it is to say."""  
-    """nate is 0, jiahui is 2, Mxyzptlk is 4.0, and the is -4617.41666666667.""" 
+    """And get back a difficulty score of how hard it is to say."""
+    """nate is 0, jiahui is 2, Mxyzptlk is 4.0, and the is -4617.41666666667."""
     if not corpus:
         sURL = 'http://yorda.cs.northwestern.edu:8081/get_difficulty?word=%s' % word
     else:
@@ -426,7 +426,7 @@ def any(lx):
 def weighted_string(*args):
     '''Takes something like weighted_string(2, 'Nate', 'Dogg') and "weights" 'Nate' twice as much as Dogg.  Format is pairs weight, string, weight, string...
     but if you leave off the weight, it's assumed to be one.  Just returns a repeated string, but works fine.  So if you have a dictionary with title and body
-    keys, and want to weight the title x2 for counting or tfidf or something, you could do 
+    keys, and want to weight the title x2 for counting or tfidf or something, you could do
     content = weighted_string(2, d['title'], d['body'])'''
     ret = []
     i = 0
@@ -442,7 +442,7 @@ def weighted_string(*args):
         i += 1
     ret = ' '.join(ret)
     return ret
-    
+
 def bLooseIn(sLHS, sRHS):
     '''bLooseIn('Hillary Clinton', 'Hillary Rodham Clinton') -> True
     bLooseIn('Hillary Clinton', 'My name is Hillary.  Is yours Clinton?') -> True
@@ -456,9 +456,9 @@ def bLooseIn(sLHS, sRHS):
 def bLooseStringEquals(lhs, rhs):
     lhs, rhs = sStripStopWords(lhs).lower().strip(), sStripStopWords(rhs).lower().strip()
     return lhs == rhs
-    
+
 def iMultiStringCount(sStr, lsTerms):
-    '''Returns the total number of occurrences of the terms in lsterms in sStr.  Is smart about 
+    '''Returns the total number of occurrences of the terms in lsterms in sStr.  Is smart about
     iMultiStringCount('foobar baz', ['foobar', 'bar']) -> 1 and not 2.'''
     dCounts = {}
     for sTerm in lsTerms:
@@ -473,7 +473,7 @@ def iMultiStringCount(sStr, lsTerms):
     for sTerm in dCounts:
         for sBigger in dPartOf[sTerm]:
             dCounts[sTerm] -= dCounts[sBigger]
-    
+
     iRet = sum(dCounts.values())
     return iRet
 
@@ -492,11 +492,11 @@ class Singleton(object):
         if '_inst' not in vars(cls):
             cls._inst = object.__new__(cls, *args, **kwargs)
         return cls._inst
-    
+
 def lxEverythingInModulesThat(lsModules, funcTest):
     for sModule in lsModules:
         exec('import %s' % sModule)
-    
+
     lxRet = []
     for sModule in lsModules:
         for s in dir(locals()[sModule]):
@@ -509,7 +509,7 @@ class cPrintEverythingMixin:
         sRet = ''
         sRet = '\n'.join(['%s ==> %s' % (k, v) for (k, v) in self.__dict__.items()])
         return sRet
-    
+
 class BlankObject:
     pass
 
@@ -519,7 +519,7 @@ class DefaultDict(dict):
         self.default = default
 
     def __getitem__(self, key):
-        if key in self: 
+        if key in self:
             return self.get(key)
         else:
             ## Need copy in case self.default is something like []
@@ -575,10 +575,10 @@ class MaxSizeCache:
         xRet = getattr(self.__dEntries, k)
         self.__cLock.release()
         return xRet
-        
+
 
 def sLooseMD5Hash(sText):
-    '''This is intended to return a "loose hash" that will be the same with slightly different text.  If Yahoo! fixes a mispelling, for example, we 
+    '''This is intended to return a "loose hash" that will be the same with slightly different text.  If Yahoo! fixes a mispelling, for example, we
     don't want to rerun the story.
     The algorithm is from Sanj, do a histogram of all the words, take the top half, and make a string and hash that.  It makes sense,
     we'll see how it works.  My hunch is its too lenient on short texts.'''
@@ -600,7 +600,7 @@ def In(xTest, lx, func):
             return True
     return False
 
-  
+
 
 def sXMLUnescape(s):
     '''Use this.  Thanks for nothing, saxutils.'''
@@ -613,7 +613,7 @@ def sXMLUnescape(s):
 
 def sXMLEscape(s):
     '''Use this.  Thanks for nothing, saxutils.'''
-    
+
     sRet = escape(s, {'"':'&quot;', "'":'&apos;', ',':'&#151;', '-':'&#151;', '$':'&#36;'})
     return sRet
 
@@ -629,7 +629,7 @@ def iStringDistance(a,b):
         # Make sure n <= m, to use O(min(n,m)) space
         a,b = b,a
         n,m = m,n
-        
+
     current = range(n+1)
     for i in range(1,m+1):
         previous, current = current, [i]+[0]*n
@@ -639,7 +639,7 @@ def iStringDistance(a,b):
             if a[j-1] != b[i-1]:
                 change = change + 1
             current[j] = min(add, delete, change)
-            
+
     return current[n]
 
 def iListDistance(a, b):
@@ -677,15 +677,15 @@ def sSharedPrefix(sLHS, sRHS, iLHSOffset=0, iRHSOffset=0):
 
 def convertMoney(sStr):
    '''This converts $399.95 to 399 dollars and 95 cents'''
-   
+
    cMatch = re.compile(r'\$\s*(?P<dollars>\d+)\.(?P<cents>\d\d)')
-   
+
    sText = cMatch.sub('\g<dollars> dollars and \g<cents> cents', sStr)
    return sText
 
 def convertThousands(sText):
-    
-    
+
+
     #tests for 2300,2400,2500,etc, and also at different
     #positions in the sentence (beginning, middle or end)
     cMatch = re.compile(r'(?P<begin>\D)(?P<num1>\d[1-9])00(?P<end>\D)')
@@ -696,7 +696,7 @@ def convertThousands(sText):
     sText = cMatch.sub(r' \g<num1> hundred \g<end> ',sText)
     cMatch = re.compile(r'(^)(?P<num1>\d[1-9])00($)')
     sText = cMatch.sub(r' \g<num1> hundred ',sText)
-    
+
     #tests for last two digits as a single digit # 1-9 ,etc, and also at different
     #positions in the sentence (beginning, middle or end)
     cMatch = re.compile(r'(?P<begin>\D)(?P<num1>\d[1-9])0(?P<num2>[1-9])(?P<end>\D)')
@@ -704,10 +704,10 @@ def convertThousands(sText):
     cMatch = re.compile(r'(?P<begin>\D)(?P<num1>\d[1-9])0(?P<num2>[1-9])($)')
     sText = cMatch.sub(' \g<begin>\g<num1> hundred and \g<num2> ',sText)
     cMatch = re.compile(r'(^)(?P<num1>\d[1-9])0(?P<num2>[1-9])(?P<end>\D)')
-    sText = cMatch.sub(' \g<num1> hundred and \g<num2> \g<end>',sText) 
+    sText = cMatch.sub(' \g<num1> hundred and \g<num2> \g<end>',sText)
     cMatch = re.compile(r'(^)(?P<num1>\d[1-9])0(?P<num2>[1-9])($)')
     sText = cMatch.sub(' \g<num1> hundred and \g<num2> ',sText)
-      
+
     #tests for last two digits as a double digit 10-99 ,etc, and also at different
     #positions in the sentence (beginning, middle or end)
     cMatch = re.compile(r'(?P<begin>\D)(?P<num1>\d[1-9])(?P<num2>[0-9][0-9])(?P<end>\D)')
@@ -715,32 +715,32 @@ def convertThousands(sText):
     cMatch = re.compile(r'(?P<begin>\D)(?P<num1>\d[1-9])(?P<num2>[0-9][0-9])($)')
     sText = cMatch.sub(' \g<begin> \g<num1> hundred \g<num2> ',sText)
     cMatch = re.compile(r'(^)(?P<num1>\d[1-9])(?P<num2>[0-9][0-9])(?P<end>\D)')
-    sText = cMatch.sub(' \g<num1> hundred \g<num2>\g<end> ',sText) 
+    sText = cMatch.sub(' \g<num1> hundred \g<num2>\g<end> ',sText)
     cMatch = re.compile(r'(^)(?P<num1>\d[1-9])(?P<num2>[0-9][0-9])($)')
     sText = cMatch.sub('\g<num1> hundred \g<num2> ',sText)
-    
+
     return sText
 
 def storyIncomprehensible(sStr):
-    
+
     cMatch = re.compile(r'(([A-Z]+[0-9]+)|([0-9]+[A-Z]+))')
     cMatch2 = re.compile(r'\s+')
-    
+
     lList = cMatch.findall(sStr)
     lList2 = cMatch2.findall(sStr)
-    
+
     if len(lList) > 0:
         num1 = float(len(lList))
         num2 = float(len(lList2))
-        
+
         #if 10% or more of the words are something
         #like A200, 2GHZ, and so on get rid of
         #story
         #print num1/num2
         if num1/num2 >= .1:
             return "true"
-        
-    return "false"   
+
+    return "false"
 
 def sumAny(*args):
     '''Like sum, but works for anything.  THis is probably already provided but I don't know what it would becalled.'''
@@ -749,7 +749,7 @@ def sumAny(*args):
     for x in args[1:]:
         ret = ret + x
     return ret
- 
+
 def tStoreFileLocally(sURL, sHostname='', iPort=8080, sSuffix=None,sFileName = '',bImage=False,sPath=''):
     '''Takes a path to a remote resource (like an image) and stores a copy of that locally in your www directory with a random unique name.
     Returns a tuple, the first element is a local path ('c:\www\foo.jpg'), the second is a url ('http://yourcomputername/foo.jpg').
@@ -757,25 +757,25 @@ def tStoreFileLocally(sURL, sHostname='', iPort=8080, sSuffix=None,sFileName = '
     and the http:// part.
     If you pass in any string (including the empty one) for the suffix, that will be the suffix on the file, else the function will try and guess it from the url.'''
     #print "tStoreFile bImage %s" % bImage
-    
+
     if sPath == '':
         sPath = sPathJoin(WWW_DIR, 'CachedImages')
-    
-    
+
+
     if not os.path.exists(sPath):
         os.mkdir(sPath)
-    
+
     if sFileName == '':
         sFileName = md5(str(random.random())).hexdigest()
-    
+
     if sSuffix == None:
         sSuffix = '.' + sURL.split('.')[-1]
     if sHostname:
         sLocalURL = sHostname.strip('/') + '/CachedImages/' + sFileName+sSuffix
     else:
         sLocalURL = 'http://%s:%s/CachedImages/%s' % (socket.getfqdn(), iPort, sFileName+sSuffix)
-    
-    
+
+
     sFileName = sPathJoin(sPath, sFileName+sSuffix)
     kwargs = {'bImage':bImage}
     ret = GetFile(sURL, open(sFileName, 'wb'),**kwargs)
@@ -892,7 +892,7 @@ def StartFile(sFilename):
 #    win32api.CloseHandle(hProc)
 #    result = ""
 
-    
+
 def sRemoteCall(sMachine, sFunction, bEscape, **kwargs):
     '''To call PresentShow, for example you might do:
     sRemoteCall(NEWS_AT_SEVEN_SERVER_URL, 'PresentShow', False, sShowXML=sXML)
@@ -902,7 +902,7 @@ def sRemoteCall(sMachine, sFunction, bEscape, **kwargs):
             kwargs[k] = escape(kwargs[k])
     params = urllib.urlencode(kwargs)
     sURL = sMachine + sFunction
-    
+
     try:
         sRet = urllib.urlopen(sURL, params).read()
     except TypeError:
@@ -913,12 +913,12 @@ def sRemoteCall(sMachine, sFunction, bEscape, **kwargs):
 
 class RemoteMachine:
     '''A nice little abstraction of a remote machine that has some webservices running on it.
-    You can do things like 
+    You can do things like
     foo = RemoteMachine(url, 80)
     foo.do_remote_function()
-    and it will work.  There are also some shortcuts on what you can pass in as the url, if it is 
+    and it will work.  There are also some shortcuts on what you can pass in as the url, if it is
     a machine here on the cs.northwestern.edu domainsubnet thing, just use the normal name.
-    So you can do  
+    So you can do
     bar = RemoteMachine('jermaine')
     for http://jermaine.cs.northwestern.edu:80/'''
     def __init__(self, url, port=80):
@@ -1061,7 +1061,7 @@ def benchmark(f):
     def SlowFunction():
         print 'Blah pretend I'm slow.'
     SlowFunction()
-    
+
     will do something like
     'Function SlowFunction took 3.211274' '''
     def foo(*args, **kwargs):
@@ -1076,9 +1076,9 @@ def benchmark(f):
 def stopwatch(f, *args, **kwargs):
     '''About the same thing as the @benchmark condition above, but you use it
     when calling the slow function, not defining the slow function.  So you could do
-    
+
     stopwatch(SlowFunction, SlowFunctionArg1)
-    
+
     and get
     'Function SlowFunction took 3.211274' '''
     fStartTime = time.time()
@@ -1190,8 +1190,8 @@ def sKillNonQuotedParentheses(sStr):
             lsParts[i] = sKillParentheses(lsParts[i])
         ret = ' '.join(lsParts)
     return ret
-    
-    
+
+
 
 def __kill_tags(text, start, finish):
     import inspect
@@ -1215,8 +1215,8 @@ def sKillTags(text, *args):
     assert len(args) % 2 == 0, "Need an even number of args!"
     for i in range(0, len(args), 2):
         text = __kill_tags(text, args[i], args[i+1])
-    return text 
-    
+    return text
+
 def lsFindTagged(sStr, sStartTag, sStopTag):
     '''Returns all the strings that were found between sStartTag and sStopTag in sStr.
     So lsFindTagged('Nate is the <b>best!</b>', '<b>', '</b>') => ['best!']'''
@@ -1253,8 +1253,8 @@ def lsCapitalizedPhrases(text):
             in_phrase = False
         if word[-1] == '.' and len(word) > 2 and word[-2].islower():
             in_phrase = False
-    return ret 
-    
+    return ret
+
 def sStripNonAlNum(sStr,lsExceptions=[]):
     '''Strips leading and trailing non alnum characters and returns a new string.
     sStripNonAlNum('# !!*FooBar---') => 'FooBar' '''
@@ -1279,18 +1279,18 @@ def sStripStopWordsLeadEnd(sStr, *args, **kwargs):
 
 
 def sStripStopWordsAll(sStr, *args, **kwargs):
-    
-    
+
+
     lsWords = sStr.split()
     for i,word in enumerate(lsWords):
         if bIsStopWord(word, *args, **kwargs):
             lsWords[i] = None
-    
+
 
     lsWords = [word for word in lsWords if word]
     return ' '.join(lsWords)
 
-        
+
 
 def sScrubNonAlNum(sStr, bGoEasyOnUnicode=False):
     '''String will only have strings, numbers, and spaces.'''
@@ -1336,15 +1336,15 @@ def CommandLineCalls(lsCalls, sDir='', bQuiet=False):
     try:
         os.remove(sTempFilename)
     except OSError, e:
-        print 'Was unable to delete the temp filename, err was %s', e 
-        
+        print 'Was unable to delete the temp filename, err was %s', e
+
     os.chdir(sOldDir)
 
 def lsCommandLineCall(sCall, sDir=''):
     '''Kind of like CommandLineCalls above, but doesn't write to a batch file.
     So, you're in charge of watching your slashes and all.  But, this will return alloutput
     from sCalls.  Kind of coming at it from a different angle.'''
-    
+
     lsRet = os.popen4(sCall)[1].readlines()
 
 
@@ -1432,7 +1432,7 @@ def sKillNewlines(sText):
 #sDumbO = unicode(unichr(0xD0) + unichr(0xBE))
 #sAWithAccenAgue = unicode(unichr(195) + unichr(161))
 
-    
+
 #def SafeStr(sText):
 #    '''Takes a string, and returns as much as it can of the string that is not unicode.'''
 #    try:
@@ -1605,7 +1605,7 @@ def lsSplitAtIndices(sText, liSplitIndices):
     so lsSplitAtIndices('Foobarbaz', [1, 4, 6]) => ['F', 'oob', 'ar', 'baz'] (I think).  That's defintiely the idea, but my counting may be off.  FENCEPOST!'''
     if not liSplitIndices:
         return [sText]
-    ins = sorted(liSplitIndices)    
+    ins = sorted(liSplitIndices)
     if ins[0] != 0:
         ins = [0] + ins
     lsRet = []
@@ -1624,7 +1624,7 @@ def lsSplitMany(sText, lsSplitters):
     return lsRet
 
 def tFindAny(sText, lsSubs, *args, **kwargs):
-    '''Takes a big string and a list of possible substrings.  Returns the 
+    '''Takes a big string and a list of possible substrings.  Returns the
     a tuple, first element is found substring, second is index.  Returns the first
     one it finds.  If nothing found, returns ('', -1), args and kwargs get passed to
     str.find()'''
@@ -1725,7 +1725,7 @@ def lsSplitOnMarkup(sText, lsIgnore=['p', 'a', 'br', 'img', 'strike', 'em', 'ul'
             if letter == ' ':
                 bCollectingTag = False
             if bCollectingTag:
-                tagCollect += letter            
+                tagCollect += letter
             #lsTricky is a little tricky because it doesn't need to mind it's brackets.  So we skip it.  This may be a problem if someone in the script has a string '/script' or something
             if tagCollect in lsTricky:
                 iEndOfScript = sText.find('/' + tagCollect, i)
@@ -1772,9 +1772,9 @@ def __getFile(open_func, sURL, hOutputFile=None, bVerbose=False,bImage=False):
     TIME_BETWEEN_HITS above.  This also uses the useragent done at the start of
     this module.'''
     #print "__getFile bImage %s" % bImage
-    
+
     if bVerbose:
-        print 'Getting', sURL, 
+        print 'Getting', sURL,
     ret = ''
     if not sURL.startswith('http://'):  #just a local file
         return open(sURL).read()
@@ -1782,12 +1782,12 @@ def __getFile(open_func, sURL, hOutputFile=None, bVerbose=False,bImage=False):
     sPrefix = sURL[:i]
     iTimeBetweenHits = sPrefix in TIME_BETWEEN_HITS and TIME_BETWEEN_HITS[sPrefix] or TIME_BETWEEN_HITS['default']
     LastHitLock.acquire()
-    
+
     if sPrefix in LAST_HITS and time.time() - LAST_HITS[sPrefix] < iTimeBetweenHits:
         f = iTimeBetweenHits - (time.time() - LAST_HITS[sPrefix])
         f = max(0, f)
         time.sleep(f)
-    
+
     LAST_HITS[sPrefix] = time.time()
     LastHitLock.release()
     fStartTime = time.time()
@@ -1802,7 +1802,7 @@ def __getFile(open_func, sURL, hOutputFile=None, bVerbose=False,bImage=False):
         except:
             raise
         else:
-            break        
+            break
         iTriesSoFar += 1
     try:
         iTotalBytes = iSizeOfRemote(sURL)
@@ -1848,9 +1848,9 @@ def __getFile(open_func, sURL, hOutputFile=None, bVerbose=False,bImage=False):
 
 
 def GetFile(*args, **kwargs):#sURL, hOutputFile=None, bVerbose=False):
-    #print "GETFILE " 
+    #print "GETFILE "
     ##print args
-    #print "GETFILE" 
+    #print "GETFILE"
     #print kwargs
     myUrlclass = urllib.FancyURLopener()
     return __getFile(myUrlclass.open, *args, **kwargs)
@@ -1863,7 +1863,7 @@ def GetFileWithCookies(*args, **kwargs):
 def DownloadFile(sURL, sFilename):
     '''Takes the file at sURL at puts it at sFilename.'''
     outputFile = None
-    
+
     if __bDebug:
         print 'About to download %s to %s' % (sURL, sFilename)
     try:
@@ -1875,7 +1875,7 @@ def DownloadFile(sURL, sFilename):
     try:
             print "OPENING FILE HERE 2 %s %s" % (sURL,sFilename)
             GetFile(sURL, outputFile)
-    
+
     except IOError:
         print "IOERROR"
         outputFile.close()
@@ -1914,8 +1914,8 @@ def iSecondsFromString(sStr):
             iRet += 60 * int(ls[i])
         else:
             iRet += int(ls[i])
-    return iRet  
-    
+    return iRet
+
 def fPriceFromString(sStr):
     '''Takes something like "$58.99" and returns the float 58.99'''
     return float(sStr.strip().strip('$'))
@@ -1978,7 +1978,7 @@ def lsCleanBigrams(sStr):
     for s in ls:
         lsWords = s.split()
         lsRet += [' '.join(lsWords[i:i+2]) for i in range(len(lsWords) - 1)]
-    
+
     return [s.strip() for s in lsRet if s.strip()]
 
 
@@ -1996,7 +1996,7 @@ def lsCleanTrigrams(sStr):
     for s in ls:
         lsWords = s.split()
         lsRet += [' '.join(lsWords[i:i+3]) for i in range(len(lsWords) - 2)]
-    
+
     return [s.strip() for s in lsRet if s.strip()]
 
 def vPriceIsRightMax(l, v):
@@ -2040,13 +2040,13 @@ def lsSplitNWordsIn(sText, iWords):
         return sText[:i], sText[i:]
     else:
         return sText[:-i+1], sText[-i+1:]
-    
+
 def lsSplitNSentencesIn(sText, iSentences):
     '''Negative iSentences means count from right.  May munge spaces, and relies on lsSplitIntoSentences.'''
     lsSentences = lsSplitIntoSentences(sText)
     lsRet = '  '.join(lsSentences[:iSentences]), '  '.join(lsSentences[iSentences:])
     return lsRet
-        
+
 
 def lsSplitIntoSentences(sText):
     '''From Mike Smathers (with a few additions by Lisa Gandy :))'''
@@ -2056,23 +2056,23 @@ def lsSplitIntoSentences(sText):
     abbrevs = ['u.s.','mr.', 'mrs.', 'sen.', 'rep.', 'gov.', 'miss.', 'dr.','ms.', 'lt.']
     abbrevs.extend(['jan.','feb.','aug.','sept.','oct.','nov.','dec.'])
     initial = re.compile('\s[a-zA-Z0-9]\.$')
-    
+
     sentences = []
     p = re.compile(r'([\?\!\.]"?\s+[A-Z0-9"])', re.MULTILINE|re.DOTALL)
-   
+
     m = p.findall(sText)
 
     idx = 0
     idy = 0
     cand = ''
     hasAbbrev = False
-    
+
     for mm in m:
         idy += sText[idx:].find(mm)+1
         cand += ' '+sText[idx:idy].strip()
         #print "cand %s" % cand
         hasAbbrev = False
-        
+
         if initial.findall(cand, re.MULTILINE|re.DOTALL):#re.findall(initial,cand,re.MULTILINE|re.DOTALL):
            #print re.findall(initial,cand,re.MULTILINE|re.DOTALL)
            hasAbbrev = True
@@ -2081,11 +2081,11 @@ def lsSplitIntoSentences(sText):
                 if cand.lower().endswith(a):
                     hasAbbrev = True
                     break
-        
-        
+
+
             if len(cand) > 2 and not cand[-3].isupper() and cand[-2].isupper() and cand[-1] == '.': #something like J.J.
                 hasAbbrev = True
-            
+
         if not hasAbbrev:
             sentences.append(cand.strip())
             cand = ''
@@ -2094,7 +2094,7 @@ def lsSplitIntoSentences(sText):
     if idx < len(sText):
         if hasAbbrev == True:
             sentences.append(cand + sText[idx:].strip())
-        else:    
+        else:
             sentences.append(sText[idx:].strip())
 
     return sentences
@@ -2144,19 +2144,19 @@ def sToday():
 # except IOError:
 #     print 'COULDNT FIND MALE OR FEMALE NAMES!'
 #     lsMaleNames, lsFemaleNames = [], []
-    
+
 # try:
 #     lsLastNames = [l.lower().strip() for l in open(sPathJoin(LAST_NAME_DIR, 'lastnames.txt'))]
 # except (IOError, NameError), e:
 #     lsLastNames = []
-#     
+#
 try:
     lsStopWords = [l.lower().strip() for l in open(CCU_DATA_PATH + 'stop_words.lst') if not l.startswith('#')]
     dStopWords = dict(zip(lsStopWords, EZGen(True)))
 except IOError:
     #print 'DIDNT FIND STOPWORDS!'
     lsStopWords = dStopWords = None
-    
+
 # try:
 #     lsDictWords = [l.lower().strip() for l in open(PATH_TO_DICTIONARY_WORDS) if not l.startswith('#')]
 #     lsDictWords += ["we're", 'I']
@@ -2164,25 +2164,25 @@ except IOError:
 # except IOError:
 #     #print 'DIDNT FIND DICTIONARY WORDS!'
 #     lsDictWords = dDictWords = None
-# 
+#
 # try:
 #     lsProfWords = [l.lower().strip() for l in open(PATH_TO_PROFANITY_LIST) if not l.startswith('#')]
 #     dProfWords = dict(zip(lsProfWords, EZGen(True)))
 # except (NameError, IOError), e:
 #     #print 'DIDNT FIND PROFANITY LIST!'
 #     lsProfWords = dProfWords = None
-#     
+#
 # try:
 #     lsPosWords = [l.lower().strip() for l in open(PATH_TO_POS_LIST) if not l.startswith('#')]
 #     dPosWords = dict(zip(lsPosWords, EZGen(True)))
 # except (NameError, IOError), e:
 #     #print 'DIDNT FIND POS LIST!'
-#     lsPosWords = dPosWords = None    
-    
+#     lsPosWords = dPosWords = None
 
-def bIsLastName(sWord):    
+
+def bIsLastName(sWord):
     return sWord.lower() in lsLastNames
-     
+
 
 
 def bIsDictionaryWordWiki(word):
@@ -2195,18 +2195,18 @@ def bIsDictionaryWordWiki(word):
      GNU Linux)'})
         url = urllib2.urlopen(req)
         doc = BeautifulSoup(url.read())
-    
+
         no_art = doc.findAll('div', attrs = {'class': 'noarticletext'})
         if no_art != []:
             #print 'no article'
             return False
-        
+
         langTags = doc.findAll('span',{'class':'mw-headline'})
         for tagB in langTags:
             if tagB.string == "English":
                 return True
         return False
-        
+
     except urllib2.HTTPError:
         #print ex
         return False
@@ -2221,12 +2221,12 @@ def bIsProfanity(sWord):
 
     for word in dProfWords:
         c = re.compile(' ' + word + '[^a-zA-z]',re.IGNORECASE)
-        
+
         if re.search(c,' ' + sWord + ' '):
         #if sWord.lower().find(' ' + word.lower() + ' ') > -1:
             #print 'matched word %s' % word
             return True
-        
+
     return False
     #return sWord.lower() in dProfWords
 
@@ -2234,12 +2234,12 @@ def bIsProfanityRegEx(sWord):
     profList = ['f.*\W+.*ing','sh\Wt','s\W\Wt','sh\Wt','f\W\Wk','fu\Wk','\W\*+\W','b\W\Wch','b\W*i\W*t\W*c\W*h','b\W\W\W\W']
     for word in profList:
         c = re.compile(word,re.IGNORECASE)
-        
+
         if re.search(c,' ' + sWord + ' '):
             if sWord.lower().find(' ' + word.lower() + ' ') > -1:
                 print 'matched word %s' % word
             return True
-        
+
     return False
 
 
@@ -2251,7 +2251,7 @@ def bIsProfanityRegEx(sWord):
 #        if re.search(c,' ' +sWord+' '):
 #            #print 'matched word %s' % word
 #            return True
-#        
+#
 #    return False
 #    #return sWord.lower() in dProfWords
 
@@ -2259,7 +2259,7 @@ def bIsStopWord(sWord, bStrict=False, bIgnoreCase=True):
     '''Takes a word, return True if its a stop word, false otherwise.  Case Insensitive.
     Uses the list at stop_words.lst in ShowShared.'''
     assert dStopWords, 'THe stop word list isnt loaded!  Are you sure stop_words.lst is where I expect , at %s?!?!' % (PATH_TO_STOP_WORDS_LIST)
-    
+
     if bIgnoreCase:
         sWord = sWord.lower()
     if bStrict:
@@ -2293,7 +2293,7 @@ def sTrueCase(text):
                 else:
                     ret.append(word)
             else:
-                ret.append(word)        
+                ret.append(word)
     ret = ''.join(ret)
     return ret
 
@@ -2306,7 +2306,7 @@ def sForceTitle(sText):
         else:
             lsWords.append(sWord[0].upper() + sWord[1:])#can't use sWord.title() here because then we lose the capital P in McPhee
     sRet = ' '.join(lsWords)
-    return sRet 
+    return sRet
 
 def bIsFirstName(sWord):
     return (sWord.lower() in lsMaleNames) or (sWord.lower() in lsFemaleNames)
@@ -2317,7 +2317,7 @@ def bIsFemaleName(sWord):
         return sWord.lower() in lsFemaleNames
     else:
         return False
-    
+
 def bIsMaleName(sWord):
     if sWord:
         return sWord.lower() in lsMaleNames
@@ -2334,7 +2334,7 @@ def iBestMatch(sMain, lsTexts, bIgnoreCase=False):
     '''Returns the index of the text in lsTexts that is closest to sMain.'''
     lsMainWords = bIgnoreCase and sMain.lower().split() or sMain.split()
     lsMainWords = [sStripNonAlNum(s) for s in lsMainWords]
-    
+
     liCounts = [0] * len(lsTexts)
     for i, sText in enumerate(lsTexts):
         lsTestWords = bIgnoreCase and sText.lower().split() or sText.split()
@@ -2349,7 +2349,7 @@ def iBestMatch(sMain, lsTexts, bIgnoreCase=False):
         if iVal > iBestVal:
             iBestVal = iVal
             iBest = iCurr
-    
+
     return iBest
 
 def lsWordsFromText(sText, bIgnoreCase=False, bIgnoreStopWords=True):
@@ -2376,7 +2376,7 @@ def fStringOverlap(sMain, sOther, *args, **kwargs):
     '''Returns the PERCENT of words in sMain that are also in sOther.  0<=ret<=1'''
     iMatchCount = iStringOverlapCount(sMain, sOther, **kwargs)
     lsMainWords = lsWordsFromText(sMain, **kwargs)
-    
+
     fRet = lsMainWords and iMatchCount / float(len(lsMainWords)) or 0.0
     return fRet
 
@@ -2396,17 +2396,17 @@ def ifBestMatchBothWays(sMain, lsTexts, *args, **kwargs):
         if f > fCurrMax:
             fCurrMax = f
             iCurrBest = i
-    
-    
+
+
     return iCurrBest, fCurrMax
-    
+
 def iSyllablesCalc (word):
         '''counts approximate number of syllables in a word'''
         word_length = len(word)
         lastVowel = 0;
         letter = ' ';
         numSyllables = 0
-        
+
         if word_length <= 3:
             numSyllables=numSyllables+1
         else:
@@ -2419,17 +2419,17 @@ def iSyllablesCalc (word):
                         lastVowel = 1;
                 else:
                     lastVowel = 0;
-                
+
                 i=i+1
             #end of for loop from 0 through  next to last character of word
-        
+
             letter = word[word_length-2];
-   
+
             if letter in 'auio':
                 if lastVowel==0:
                     numSyllables=numSyllables+1
                     lastVowel=1
-                    
+
             elif letter == 'e':
                 lastLetter = word[word_length-1]
                 if lastLetter!='s' or lastLetter!='d':
@@ -2443,16 +2443,16 @@ def iSyllablesCalc (word):
             if letter in 'auioy':
                     if lastVowel==0:
                         numSyllables=numSyllables+1
-                    
+
             elif letter == 'e':
                 letterBefore = word[word_length-2]
                 if letterBefore=='l':
                     if lastVowel==0:
                         numSyllables=numSyllables+1
-        
+
         if numSyllables == 0:
             return 1
-                        
+
         return numSyllables
 
 def stripWords(text):
@@ -2460,16 +2460,16 @@ def stripWords(text):
     return text
 
 def _getFile(url,cachedFile=False):
-    
+
     if cachedFile:
         _cache_dir = CCU_PATH % 'cache'
         assert os.path.isdir(_cache_dir), "zoinks, you forgot to change me to point to a good place for you!"
         filename = os.path.join(_cache_dir, md5)
-        
+
     """Does some caching too, not threadsafe, nothing fancy, but MC and RT are slow as all hell."""
     assert url, "WHY are you trying to load an empty string url?!?!  Nothing good will come of this!  In fact, I will assure that! %s" % (url)
     md5 = hashlib.md5(url).hexdigest()
-    
+
     if cachedFile and os.path.exists(filename):
         # print 'Hit!', filename
         ret = open(filename, 'r').read()
@@ -2484,7 +2484,7 @@ def _getFile(url,cachedFile=False):
             o.close()
     return ret
 
-                    
+
 def sStripGETParameters(sURL, lsParamsYouWant=None):
     '''Strips GET parameters off the url, leaving the ones you want.  Case in-sensitive. Returns a new URL
     sRemoveGetParameters('www.google.com?foo=baz&bar=gnar, ['bar']) ==> 'www.google.com?bar=gnar' '''
@@ -2523,7 +2523,7 @@ def test_rss_logger():
         #oh noes!
         import rss_complainer
         rss_complainer.complain("Something bad happened when dividing! %s" % e)
-        
+
 def iLinesInFile(sFilename):
     '''Takes a filename and returns the number of lines in it, probably only works on Linux/OSX'''
     sCommand = 'wc -l %s' % (sFilename)
@@ -2551,7 +2551,7 @@ def is_url(text):
     return False
 
 def sMimeType(fileName):
-    
+
     try:
         fTemp = urllib.urlopen(fileName)
         messageObj = fTemp.info()
@@ -2567,4 +2567,3 @@ def stripCardinalNum(strNum):
 
 if __name__ == '__main__':
     print lsSplitIntoSentences('Hello world!  My name is Nate')
-

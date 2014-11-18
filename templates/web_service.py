@@ -1,5 +1,5 @@
 from werkzeug.wrappers import Request, Response
-import simplejson
+import json as simplejson
 import cherrypy
 
 import werkzeug
@@ -15,11 +15,11 @@ def yourview(request):
    return HttpResponse(json, mimetype='application/json')
 
 # class Service:
-# 
+#
 #     @expose
 #     def index(self):
 #         return 'Hello World'
-# 
+#
 # cherrypy.quickstart(Service())
 
 
@@ -27,7 +27,7 @@ def yourview(request):
 # @Request.application
 # def application(request):
 #     return Response(simplejson.dumps({'stuff':'stuff1','stuff2':'stuff'}))
-# 
+#
 if __name__ == '__main__':
     from werkzeug.serving import run_simple
     run_simple('localhost', 4000, yourview)

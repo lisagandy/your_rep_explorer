@@ -1,16 +1,16 @@
-from your_rep_explorer.ccu_gen_beta.models import *
+from ccu_gen_beta.models import *
 from django.contrib import admin
 
 class AnomVoters(admin.ModelAdmin):
 	list_display=["vote","demVoters","repVoters"]
 
-class CongressAdmin(admin.ModelAdmin):   
+class CongressAdmin(admin.ModelAdmin):
     list_display = ['number','beginDate','endDate']
 
 class StateAdmin(admin.ModelAdmin):
     list_display = ['name','abbrev']
-    search_fields = ['name','abbrev']    
-    
+    search_fields = ['name','abbrev']
+
 class DistrictAdmin(admin.ModelAdmin):
     list_display = ['state','districtNum']
     search_fields = ['districtNum','state__name']
@@ -26,14 +26,14 @@ class StatePVIAdmin(admin.ModelAdmin):
 class DistrictPVIAdmin(admin.ModelAdmin):
     list_display = ['district','demCook','scoreCook','year']
     search_fields = ['district__state__name','district__districtNum']
- 
+
 class JonesTopicAdmin(admin.ModelAdmin):
     list_display = ['name','code']
     search_fields = ['name','code']
 
 class JonesSubTopicAdmin(admin.ModelAdmin):
     list_display = ['name','topic','descript','code']
-    search_fields = ['name','descript','code'] 
+    search_fields = ['name','descript','code']
 
 class MapLightSectorAdmin(admin.ModelAdmin):
     list_display = ['name','code']
@@ -48,7 +48,7 @@ class MapLightBusinessAdmin(admin.ModelAdmin):
 
 class RepAdmin(admin.ModelAdmin):
     list_display = ('congress','lastName','firstName','state','district','party','senator','senatorClass','swornInDate','endDate')#'repID','repGovTrackID',)
-    search_fields = ('lastName','senator','party','repGovTrackID')    
+    search_fields = ('lastName','senator','party','repGovTrackID')
 
 class RepContributionAdmin(admin.ModelAdmin):
     list_display = ['rep','rbID','dateContr','contribName','mlBusiness','isPAC']
@@ -61,11 +61,11 @@ class NAICS_IndustryAdmin(admin.ModelAdmin):
 # class NAICS_LocaleAdmin(admin.ModelAdmin):
 #     list_display = ['state','numEmployees','naicsIndustry','beginQuarter','beginYear','endQuarter','endYear']
 #     search_fields = ['state__name','naicsIndustry__name']
-#     
+#
 
 class NAICS_LocaleAdmin(admin.ModelAdmin):
         list_display = ['state','numEmployeesTotal','numEmployees','naicsIndustry','beginQuarter','beginYear','endQuarter','endYear']
-        search_fields = ['state__name','naicsIndustry__name']    
+        search_fields = ['state__name','naicsIndustry__name']
 
 class ElectionAdmin(admin.ModelAdmin):
     list_display = ['date','senateClass']
@@ -119,8 +119,8 @@ class BillSubjectAdmin(admin.ModelAdmin):
 admin.site.register(BillSubject,BillSubjectAdmin)
 admin.site.register(OrgStance,OrgStanceAdmin)
 admin.site.register(Vote,VoteAdmin)
-admin.site.register(VoteType,VoteTypeAdmin)    
-admin.site.register(Amendment,AmendmentAdmin)    
+admin.site.register(VoteType,VoteTypeAdmin)
+admin.site.register(Amendment,AmendmentAdmin)
 admin.site.register(Organization,OrganizationAdmin)
 admin.site.register(Congress,CongressAdmin)
 admin.site.register(State,StateAdmin)
